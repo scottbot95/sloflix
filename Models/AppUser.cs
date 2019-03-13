@@ -7,7 +7,7 @@ namespace slo_flix.Models
 {
   public class AppUser : IdentityUser
   {
-    public List<Watchlist> Watchlists { get; set; }
+
   }
 
   public class UserDto

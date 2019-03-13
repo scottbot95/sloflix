@@ -171,20 +171,19 @@ namespace slo_flix.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Watchlists",
+                name: "MovieWatchers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    AppUserId = table.Column<string>(nullable: true)
+                    IdentityId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Watchlists", x => x.Id);
+                    table.PrimaryKey("PK_MovieWatchers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Watchlists_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
+                        name: "FK_MovieWatchers_AspNetUsers_IdentityId",
+                        column: x => x.IdentityId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -212,6 +211,26 @@ namespace slo_flix.Data.Migrations
                         name: "FK_UserRatings_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Watchlists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    MovieWatcherId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Watchlists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Watchlists_MovieWatchers_MovieWatcherId",
+                        column: x => x.MovieWatcherId,
+                        principalTable: "MovieWatchers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -278,6 +297,11 @@ namespace slo_flix.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_MovieWatchers_IdentityId",
+                table: "MovieWatchers",
+                column: "IdentityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRatings_UserId",
                 table: "UserRatings",
                 column: "UserId");
@@ -288,9 +312,9 @@ namespace slo_flix.Data.Migrations
                 column: "WatchlistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Watchlists_AppUserId",
+                name: "IX_Watchlists_MovieWatcherId",
                 table: "Watchlists",
-                column: "AppUserId");
+                column: "MovieWatcherId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -324,6 +348,9 @@ namespace slo_flix.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Watchlists");
+
+            migrationBuilder.DropTable(
+                name: "MovieWatchers");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

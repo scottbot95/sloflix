@@ -198,6 +198,20 @@ namespace slo_flix.Data.Migrations
                     b.ToTable("Movies");
                 });
 
+            modelBuilder.Entity("slo_flix.Models.MovieWatcher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("IdentityId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityId");
+
+                    b.ToTable("MovieWatchers");
+                });
+
             modelBuilder.Entity("slo_flix.Models.UserRating", b =>
                 {
                     b.Property<int>("MovieId");
@@ -220,13 +234,13 @@ namespace slo_flix.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AppUserId");
+                    b.Property<int?>("MovieWatcherId");
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("MovieWatcherId");
 
                     b.ToTable("Watchlists");
                 });
@@ -296,6 +310,13 @@ namespace slo_flix.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("slo_flix.Models.MovieWatcher", b =>
+                {
+                    b.HasOne("slo_flix.Models.AppUser", "Identity")
+                        .WithMany()
+                        .HasForeignKey("IdentityId");
+                });
+
             modelBuilder.Entity("slo_flix.Models.UserRating", b =>
                 {
                     b.HasOne("slo_flix.Models.Movie", "Movie")
@@ -310,9 +331,9 @@ namespace slo_flix.Data.Migrations
 
             modelBuilder.Entity("slo_flix.Models.Watchlist", b =>
                 {
-                    b.HasOne("slo_flix.Models.AppUser")
+                    b.HasOne("slo_flix.Models.MovieWatcher")
                         .WithMany("Watchlists")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("MovieWatcherId");
                 });
 
             modelBuilder.Entity("slo_flix.Models.WatchlistItem", b =>

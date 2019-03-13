@@ -15,6 +15,7 @@ namespace slo_flix.Data
     public DbSet<Watchlist> Watchlists { get; set; }
     public DbSet<WatchlistItem> WatchlistItems { get; set; }
     public DbSet<AppUser> AppUsers { get; set; }
+    public DbSet<MovieWatcher> MovieWatchers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
