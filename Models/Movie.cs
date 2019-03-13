@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace slo_flix.Models
 {
-  public class Movie : Entity
+  public class Movie
   {
     public int Id { get; set; }
     [Required]
@@ -25,7 +25,7 @@ namespace slo_flix.Models
     public int tmdbId { get; set; }
   }
 
-  public class UserRating : Entity
+  public class UserRating
   {
     public int UserId { get; set; }
     public User User { get; set; }

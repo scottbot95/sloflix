@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
 using slo_flix.Data;
+using slo_flix.Models;
+using System;
 
 namespace slo_flix
 {
@@ -29,7 +32,37 @@ namespace slo_flix
         options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"))
       );
 
+      services.AddIdentity<User, IdentityRole>()
+        .AddEntityFrameworkStores<DataContext>()
+        .AddDefaultTokenProviders();
 
+
+      services.Configure<IdentityOptions>(options =>
+      {
+        // Password settings
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 8;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireLowercase = false;
+
+        // Lockout settings
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+        options.Lockout.MaxFailedAccessAttempts = 10;
+        options.Lockout.AllowedForNewUsers = true;
+
+        // User settings
+        options.User.RequireUniqueEmail = true;
+      });
+
+      services.ConfigureApplicationCookie(options =>
+      {
+        options.Cookie.Expiration = TimeSpan.FromDays(180);
+
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.SlidingExpiration = true;
+      });
 
       services.AddAutoMapper();
 
@@ -59,6 +92,8 @@ namespace slo_flix
       app.UseHttpsRedirection();
       app.UseStaticFiles();
       app.UseSpaStaticFiles();
+
+      app.UseAuthentication();
 
       app.UseMvc(routes =>
       {
