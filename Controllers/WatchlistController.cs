@@ -3,7 +3,7 @@ using AutoMapper;
 
 namespace slo_flix.Controllers
 {
-  public class WatchlistController
+  public class WatchlistController : Controller
   {
 
   }
