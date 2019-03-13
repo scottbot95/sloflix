@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using AutoMapper;
 
 using slo_flix.Data;
@@ -28,8 +28,13 @@ namespace slo_flix
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      //   services.AddDbContextPool<DataContext>(options => options.UseMySql())
       services.AddDbContext<DataContext>(options =>
-        options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"))
+        options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+        mySqlOptions =>
+        {
+          mySqlOptions.ServerVersion(new Version(5, 7, 25), ServerType.MySql);
+        })
       );
 
       services.AddIdentity<User, IdentityRole>()
