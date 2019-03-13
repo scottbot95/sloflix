@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace slo_flix.Models
+namespace slo_flix.Data
 {
-  public class DataContext : DbContext
+  public class DataContext : IdentityDbContext
   {
     public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
@@ -40,6 +41,8 @@ namespace slo_flix.Models
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      base.OnModelCreating(modelBuilder);
+
       modelBuilder.Entity<WatchlistItem>().
         HasKey(m => new { m.MovieId, m.WatchlistId });
 

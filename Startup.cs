@@ -9,7 +9,7 @@ using MySql.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
-using slo_flix.Models;
+using slo_flix.Data;
 
 namespace slo_flix
 {
@@ -26,8 +26,10 @@ namespace slo_flix
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<DataContext>(options =>
-        options.UseMySQL(Configuration.GetConnectionString("MovieWatchList"))
+        options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"))
       );
+
+
 
       services.AddAutoMapper();
 
