@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 
+using slo_flix.Data;
 using slo_flix.Models;
 using slo_flix.Helpers;
 
@@ -13,17 +14,21 @@ namespace slo_flix.Controllers
   {
     private IMapper _mapper;
     private UserManager<AppUser> _userManager;
+    private DataContext _dataContext;
 
-    public AccountsController(IMapper mapper, UserManager<AppUser> userManager)
+    public AccountsController(IMapper mapper,
+                              UserManager<AppUser> userManager,
+                              DataContext dataContext)
     {
       _mapper = mapper;
       _userManager = userManager;
+      _dataContext = dataContext;
     }
 
 
     // POST /auth/accounts
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody]UserDto model)
+    public async Task<IActionResult> Post([FromBody]AppUserDto model)
     {
       if (!ModelState.IsValid)
       {
@@ -36,7 +41,10 @@ namespace slo_flix.Controllers
       if (!result.Succeeded)
         return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
 
-      return new JsonResult(userIdentity);
+      var roleResult = await _dataContext.MovieWatchers.AddAsync(new MovieWatcher { IdentityId = userIdentity.Id });
+      await _dataContext.SaveChangesAsync();
+
+      return new JsonResult(_mapper.Map<MovieWatcherDto>(roleResult.Entity));
       // return new OkResult();
     }
   }

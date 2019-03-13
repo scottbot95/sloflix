@@ -10,16 +10,16 @@ namespace slo_flix.Models
 
   }
 
-  public class UserDto
+  public class AppUserDto
   {
     public int id { get; set; }
     public string email { get; set; }
     public string password { get; set; }
   }
 
-  public class UserDtoValidator : AbstractValidator<UserDto>
+  public class AppUserDtoValidator : AbstractValidator<AppUserDto>
   {
-    public UserDtoValidator()
+    public AppUserDtoValidator()
     {
       RuleFor(dto => dto.email).NotEmpty().WithMessage("Email can't be empty")
         .EmailAddress().WithMessage("Email must be a valid email address");

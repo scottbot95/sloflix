@@ -7,8 +7,8 @@ namespace slo_flix.Data
   {
     public AutoMappers()
     {
-      CreateMap<AppUser, UserDto>().ForMember(dto => dto.email, map => map.MapFrom(u => u.UserName));
-      CreateMap<UserDto, AppUser>().ForMember(u => u.UserName, map => map.MapFrom(dto => dto.email));
+      CreateMap<AppUser, AppUserDto>().ForMember(dto => dto.email, map => map.MapFrom(u => u.UserName));
+      CreateMap<AppUserDto, AppUser>().ForMember(u => u.UserName, map => map.MapFrom(dto => dto.email));
       CreateMap<UserRating, UserRatingDto>();
       CreateMap<UserRatingDto, UserRating>();
       CreateMap<Movie, MovieDto>();
