@@ -14,6 +14,7 @@ namespace slo_flix.Data
     public DbSet<UserRating> UserRatings { get; set; }
     public DbSet<Watchlist> Watchlists { get; set; }
     public DbSet<WatchlistItem> WatchlistItems { get; set; }
+    public DbSet<AppUser> AppUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,7 +24,7 @@ namespace slo_flix.Data
         HasKey(m => new { m.MovieId, m.WatchlistId });
 
       modelBuilder.Entity<UserRating>().
-        HasKey(r => new { r.MovieId, r.UserId });
+        HasKey(r => new { r.MovieId, r.AppUserId });
     }
   }
 }

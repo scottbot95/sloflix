@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace slo_flix.Models
 {
-  public class User : IdentityUser
+  public class AppUser : IdentityUser
   {
     public List<Watchlist> Watchlists { get; set; }
   }
@@ -21,8 +21,9 @@ namespace slo_flix.Models
   {
     public UserDtoValidator()
     {
-      RuleFor(dto => dto.email).NotEmpty().EmailAddress().WithMessage("Email can't be empty+foobar");
-      RuleFor(dto => dto.email).NotEmpty().WithMessage("Password cannot be empty");
+      RuleFor(dto => dto.email).NotEmpty().WithMessage("Email can't be empty")
+        .EmailAddress().WithMessage("Email must be a valid email address");
+      RuleFor(dto => dto.password).NotEmpty().WithMessage("Password cannot be empty");
     }
   }
 }

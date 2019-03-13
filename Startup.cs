@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 
 using slo_flix.Data;
 using slo_flix.Models;
@@ -37,7 +38,7 @@ namespace slo_flix
         })
       );
 
-      services.AddIdentity<User, IdentityRole>()
+      services.AddIdentity<AppUser, IdentityRole>()
         .AddEntityFrameworkStores<DataContext>()
         .AddDefaultTokenProviders();
 
@@ -71,7 +72,9 @@ namespace slo_flix
 
       services.AddAutoMapper();
 
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+      services.AddMvc()
+        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
+        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
       // In production, the Angular files will be served from this directory
       services.AddSpaStaticFiles(configuration =>
@@ -116,7 +119,7 @@ namespace slo_flix
 
         if (env.IsDevelopment())
         {
-          spa.UseAngularCliServer(npmScript: "start");
+          spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
         }
       });
     }

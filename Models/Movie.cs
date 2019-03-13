@@ -27,8 +27,8 @@ namespace slo_flix.Models
 
   public class UserRating
   {
-    public int UserId { get; set; }
-    public User User { get; set; }
+    public int AppUserId { get; set; }
+    public AppUser User { get; set; }
 
     public int MovieId { get; set; }
     public Movie Movie { get; set; }

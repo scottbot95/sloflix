@@ -12,9 +12,9 @@ namespace slo_flix.Controllers
   public class AccountsController : Controller
   {
     private IMapper _mapper;
-    private UserManager<User> _userManager;
+    private UserManager<AppUser> _userManager;
 
-    public AccountsController(IMapper mapper, UserManager<User> userManager)
+    public AccountsController(IMapper mapper, UserManager<AppUser> userManager)
     {
       _mapper = mapper;
       _userManager = userManager;
@@ -30,13 +30,14 @@ namespace slo_flix.Controllers
         return BadRequest(ModelState);
       }
 
-      var userIdentity = _mapper.Map<User>(model);
+      var userIdentity = _mapper.Map<AppUser>(model);
       var result = await _userManager.CreateAsync(userIdentity, model.password);
 
       if (!result.Succeeded)
         return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
 
-      return new OkResult();
+      return new JsonResult(userIdentity);
+      // return new OkResult();
     }
   }
 }
