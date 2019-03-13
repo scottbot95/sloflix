@@ -1,9 +1,18 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace slo_flix.Models
 {
   public class DataContext : DbContext
   {
+    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+
+    public DbSet<Movie> Movies { get; set; }
+    public DbSet<UserRating> UserRatings { get; set; }
+    public DbSet<Watchlist> Watchlists { get; set; }
+    public DbSet<WatchlistItem> WatchlistItems { get; set; }
+    public DbSet<User> Users { get; set; }
+
     public override int SaveChanges()
     {
       var changedEntities = ChangeTracker.Entries();
@@ -15,18 +24,27 @@ namespace slo_flix.Models
         switch (changedEntity.State)
         {
           case EntityState.Added:
-            entity.OnBeforeInsert();
+            entity.OnBeforeInsert(changedEntity);
             break;
           case EntityState.Modified:
-            entity.OnBeforeUpdate();
+            entity.OnBeforeUpdate(changedEntity);
             break;
           case EntityState.Deleted:
-            entity.OnBeforeDelete();
+            entity.OnBeforeDelete(changedEntity);
             break;
         }
       }
 
       return base.SaveChanges();
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<WatchlistItem>().
+        HasKey(m => new { m.MovieId, m.WatchlistId });
+
+      modelBuilder.Entity<UserRating>().
+        HasKey(r => new { r.MovieId, r.UserId });
     }
   }
 
@@ -35,16 +53,19 @@ namespace slo_flix.Models
     /// <summary>
     /// Called before this Entity is inserted into the database
     /// </summary>
-    public virtual void OnBeforeInsert() { }
+    /// <param name="entity"></param>
+    public virtual void OnBeforeInsert(EntityEntry entity) { }
 
     /// <summary>
     /// Called before this existing Entity modified in the database
     /// </summary>
-    public virtual void OnBeforeUpdate() { }
+    /// <param name="entity"></param>
+    public virtual void OnBeforeUpdate(EntityEntry entity) { }
 
     /// <summary>
     /// Called before this existing Entity deleted from the database
     /// </summary>
-    public virtual void OnBeforeDelete() { }
+    /// <param name="entity"></param>
+    public virtual void OnBeforeDelete(EntityEntry entity) { }
   }
 }
