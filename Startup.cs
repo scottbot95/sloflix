@@ -99,7 +99,7 @@ namespace sloflix
       // jwt wire up
       IdentityModelEventSource.ShowPII = true;
       var jwtAppSettingsOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
-      var _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(nameof(JwtIssuerOptions.SecretKey)));
+      var _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtAppSettingsOptions[nameof(JwtIssuerOptions.SecretKey)]));
 
       services.Configure<JwtIssuerOptions>(options =>
       {
