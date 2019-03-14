@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace slo_flix.Data.Migrations
+namespace sloflix.Data.Migrations
 {
     public partial class Initial : Migration
     {

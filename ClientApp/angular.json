@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "slo_flix": {
+    "sloflix": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -52,18 +52,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "slo_flix:build"
+            "browserTarget": "sloflix:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "slo_flix:build:production"
+              "browserTarget": "sloflix:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "slo_flix:build"
+            "browserTarget": "sloflix:build"
           }
         },
         "test": {
@@ -122,7 +122,7 @@
         }
       }
     },
-    "slo_flix-e2e": {
+    "sloflix-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -130,7 +130,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "slo_flix:serve"
+            "devServerTarget": "sloflix:serve"
           }
         },
         "lint": {
@@ -145,5 +145,5 @@
       }
     }
   },
-  "defaultProject": "slo_flix"
+  "defaultProject": "sloflix"
 }

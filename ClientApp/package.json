@@ -1,11 +1,11 @@
 {
-  "name": "slo_flix",
+  "name": "sloflix",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:ssr": "ng run slo_flix:server:dev",
+    "build:ssr": "ng run sloflix:server:dev",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace slo_flix.Helpers
+namespace sloflix.Helpers
 {
   public interface IJwtFactory
   {

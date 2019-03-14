@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
-namespace slo_flix.Models
+namespace sloflix.Models
 {
   public class JwtIssuerOptions
   {

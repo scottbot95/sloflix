@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace slo_flix.Helpers
+namespace sloflix.Helpers
 {
   public class Errors
   {

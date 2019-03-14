@@ -1,7 +1,7 @@
 using AutoMapper;
-using slo_flix.Models;
+using sloflix.Models;
 
-namespace slo_flix.Data
+namespace sloflix.Data
 {
   public class AutoMappers : Profile
   {

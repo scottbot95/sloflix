@@ -1,4 +1,4 @@
-namespace slo_flix.Helpers
+namespace sloflix.Helpers
 {
   public class Constants
   {

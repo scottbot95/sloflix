@@ -5,13 +5,13 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using AutoMapper;
 
-using slo_flix.Data;
-using slo_flix.Models;
-using slo_flix.Helpers;
+using sloflix.Data;
+using sloflix.Models;
+using sloflix.Helpers;
 using System.Security.Claims;
 using System.Linq;
 
-namespace slo_flix.Controllers
+namespace sloflix.Controllers
 {
   [Route("auth/[controller]")]
   public class AccountsController : Controller
@@ -67,7 +67,7 @@ namespace slo_flix.Controllers
     }
 
     // POST /auth/accounts/login
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody]AppUserDto credentials)
     {
       if (!ModelState.IsValid)
@@ -92,11 +92,11 @@ namespace slo_flix.Controllers
       return new OkObjectResult(json);
     }
 
-    private async Task<ClaimsIdentity> GetClaimsIdentity(string email, string password)
+    private async Task<ClaimsIdentity> GetClaimsIdentity(string username, string password)
     {
-      if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+      if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
       {
-        var userToVerify = await _userManager.FindByEmailAsync(email);
+        var userToVerify = await _userManager.FindByNameAsync(username);
 
         if (userToVerify != null)
         {

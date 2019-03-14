@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using FluentValidation;
 
-namespace slo_flix.Models
+namespace sloflix.Models
 {
   public class AppUser : IdentityUser
   {

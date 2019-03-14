@@ -9,17 +9,23 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Logging;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using System.IdentityModel.Tokens;
+using System;
 using System.Text;
 
-using slo_flix.Data;
-using slo_flix.Models;
-using System;
+using sloflix.Data;
+using sloflix.Models;
+using sloflix.Helpers;
+using sloflix.Helpers.Extensions;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
-namespace slo_flix
+namespace sloflix
 {
   public class Startup
   {
@@ -43,6 +49,8 @@ namespace slo_flix
           mySqlOptions.ServerVersion(new Version(5, 7, 25), ServerType.MySql);
         })
       );
+
+      services.AddSingleton<IJwtFactory, JwtFactory>();
 
       services.AddIdentity<AppUser, IdentityRole>()
         .AddEntityFrameworkStores<DataContext>()
@@ -89,6 +97,7 @@ namespace slo_flix
       });
 
       // jwt wire up
+      IdentityModelEventSource.ShowPII = true;
       var jwtAppSettingsOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
       var _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(nameof(JwtIssuerOptions.SecretKey)));
 
@@ -131,15 +140,30 @@ namespace slo_flix
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
-      if (env.IsDevelopment())
+      // if (env.IsDevelopment())
+      // {
+      //   app.UseDeveloperExceptionPage();
+      // }
+      // else
       {
-        app.UseDeveloperExceptionPage();
-      }
-      else
-      {
-        app.UseExceptionHandler("/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
+        // app.UseExceptionHandler("/Error");
+        // // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        // app.UseHsts();
+        app.UseExceptionHandler(builder =>
+        {
+          builder.Run(async context =>
+          {
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+
+            var error = context.Features.Get<IExceptionHandlerFeature>();
+            if (error != null)
+            {
+              context.Response.AddApplicationError(error.Error.Message);
+              await context.Response.WriteAsync(error.Error.Message).ConfigureAwait(false);
+            }
+          });
+        });
       }
 
       app.UseHttpsRedirection();

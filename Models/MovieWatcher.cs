@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace slo_flix.Models
+namespace sloflix.Models
 {
   public class MovieWatcher
   {

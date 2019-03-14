@@ -3,9 +3,9 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using slo_flix.Data;
+using sloflix.Data;
 
-namespace slo_flix.Data.Migrations
+namespace sloflix.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -179,7 +179,7 @@ namespace slo_flix.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.Movie", b =>
+            modelBuilder.Entity("sloflix.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -198,7 +198,7 @@ namespace slo_flix.Data.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.MovieWatcher", b =>
+            modelBuilder.Entity("sloflix.Models.MovieWatcher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -212,7 +212,7 @@ namespace slo_flix.Data.Migrations
                     b.ToTable("MovieWatchers");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.UserRating", b =>
+            modelBuilder.Entity("sloflix.Models.UserRating", b =>
                 {
                     b.Property<int>("MovieId");
 
@@ -229,7 +229,7 @@ namespace slo_flix.Data.Migrations
                     b.ToTable("UserRatings");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.Watchlist", b =>
+            modelBuilder.Entity("sloflix.Models.Watchlist", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -245,7 +245,7 @@ namespace slo_flix.Data.Migrations
                     b.ToTable("Watchlists");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.WatchlistItem", b =>
+            modelBuilder.Entity("sloflix.Models.WatchlistItem", b =>
                 {
                     b.Property<int>("MovieId");
 
@@ -258,7 +258,7 @@ namespace slo_flix.Data.Migrations
                     b.ToTable("WatchlistItems");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.AppUser", b =>
+            modelBuilder.Entity("sloflix.Models.AppUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -310,40 +310,40 @@ namespace slo_flix.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("slo_flix.Models.MovieWatcher", b =>
+            modelBuilder.Entity("sloflix.Models.MovieWatcher", b =>
                 {
-                    b.HasOne("slo_flix.Models.AppUser", "Identity")
+                    b.HasOne("sloflix.Models.AppUser", "Identity")
                         .WithMany()
                         .HasForeignKey("IdentityId");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.UserRating", b =>
+            modelBuilder.Entity("sloflix.Models.UserRating", b =>
                 {
-                    b.HasOne("slo_flix.Models.Movie", "Movie")
+                    b.HasOne("sloflix.Models.Movie", "Movie")
                         .WithMany("UserRatings")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("slo_flix.Models.AppUser", "User")
+                    b.HasOne("sloflix.Models.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.Watchlist", b =>
+            modelBuilder.Entity("sloflix.Models.Watchlist", b =>
                 {
-                    b.HasOne("slo_flix.Models.MovieWatcher")
+                    b.HasOne("sloflix.Models.MovieWatcher")
                         .WithMany("Watchlists")
                         .HasForeignKey("MovieWatcherId");
                 });
 
-            modelBuilder.Entity("slo_flix.Models.WatchlistItem", b =>
+            modelBuilder.Entity("sloflix.Models.WatchlistItem", b =>
                 {
-                    b.HasOne("slo_flix.Models.Movie", "Movie")
+                    b.HasOne("sloflix.Models.Movie", "Movie")
                         .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("slo_flix.Models.Watchlist", "Watchlist")
+                    b.HasOne("sloflix.Models.Watchlist", "Watchlist")
                         .WithMany("Movies")
                         .HasForeignKey("WatchlistId")
                         .OnDelete(DeleteBehavior.Cascade);

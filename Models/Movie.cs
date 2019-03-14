@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace slo_flix.Models
+namespace sloflix.Models
 {
   public class Movie
   {

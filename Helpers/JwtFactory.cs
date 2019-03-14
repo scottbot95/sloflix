@@ -4,9 +4,9 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using slo_flix.Models;
+using sloflix.Models;
 
-namespace slo_flix.Helpers
+namespace sloflix.Helpers
 {
   public class JwtFactory : IJwtFactory
   {
