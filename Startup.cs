@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,9 +8,12 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using AutoMapper;
 using FluentValidation.AspNetCore;
+using System.IdentityModel.Tokens;
+using System.Text;
 
 using slo_flix.Data;
 using slo_flix.Models;
@@ -19,6 +23,8 @@ namespace slo_flix
 {
   public class Startup
   {
+
+
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
@@ -81,6 +87,45 @@ namespace slo_flix
       {
         configuration.RootPath = "ClientApp/dist";
       });
+
+      // jwt wire up
+      var jwtAppSettingsOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+      var _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(nameof(JwtIssuerOptions.SecretKey)));
+
+      services.Configure<JwtIssuerOptions>(options =>
+      {
+        options.Issuer = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Issuer)];
+        options.Audience = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Audience)];
+        options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+      });
+
+
+      var tokenValidationParameters = new TokenValidationParameters
+      {
+        ValidateIssuer = true,
+        ValidIssuer = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Issuer)],
+
+        ValidateAudience = true,
+        ValidAudience = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Audience)],
+
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = _signingKey,
+
+        RequireExpirationTime = false,
+        ValidateLifetime = false,
+        ClockSkew = TimeSpan.Zero
+      };
+      services.AddAuthentication(options =>
+      {
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+      }).AddJwtBearer(options =>
+      {
+        options.Audience = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Audience)];
+        options.ClaimsIssuer = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Issuer)];
+        options.TokenValidationParameters = tokenValidationParameters;
+        options.SaveToken = true;
+      });
+
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
