@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using sloflix.Models;
 
-namespace sloflix.Helpers
+namespace sloflix.Services
 {
   public class JwtFactory : IJwtFactory
   {

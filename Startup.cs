@@ -24,6 +24,7 @@ using sloflix.Helpers.Extensions;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using sloflix.Services;
 
 namespace sloflix
 {
@@ -75,15 +76,6 @@ namespace sloflix
         options.User.RequireUniqueEmail = true;
       });
 
-      services.ConfigureApplicationCookie(options =>
-      {
-        options.Cookie.Expiration = TimeSpan.FromDays(180);
-
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
-        options.SlidingExpiration = true;
-      });
-
       services.AddAutoMapper();
 
       services.AddMvc()
@@ -121,19 +113,29 @@ namespace sloflix
         IssuerSigningKey = _signingKey,
 
         RequireExpirationTime = false,
-        ValidateLifetime = false,
+        ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
       };
+
       services.AddAuthentication(options =>
       {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
       }).AddJwtBearer(options =>
       {
-        options.Audience = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Audience)];
+        // options.Audience = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Audience)];
         options.ClaimsIssuer = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Issuer)];
         options.TokenValidationParameters = tokenValidationParameters;
         options.SaveToken = true;
       });
+
+      services.AddAuthorization(options =>
+        options.AddPolicy("ApiUser",
+          policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol,
+                                        Constants.Strings.JwtClaims.ApiAccess)
+        )
+      );
 
     }
 

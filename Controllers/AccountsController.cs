@@ -10,6 +10,7 @@ using sloflix.Models;
 using sloflix.Helpers;
 using System.Security.Claims;
 using System.Linq;
+using sloflix.Services;
 
 namespace sloflix.Controllers
 {
@@ -81,15 +82,8 @@ namespace sloflix.Controllers
         return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid username or password.", ModelState));
       }
 
-      var response = new
-      {
-        id = identity.Claims.Single(c => c.Type == "id").Value,
-        auth_token = await _jwtFactory.GenerateEncodedToken(credentials.email, identity),
-        expires_in = (int)_jwtOptions.ValidFor.TotalSeconds
-      };
-
-      var json = JsonConvert.SerializeObject(response, _serializerSettings);
-      return new OkObjectResult(json);
+      var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.email, _jwtOptions, _serializerSettings);
+      return new OkObjectResult(jwt);
     }
 
     private async Task<ClaimsIdentity> GetClaimsIdentity(string username, string password)
