@@ -20,7 +20,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private userService: UserService,
-    private rotuer: Router,
+    private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
 
@@ -45,6 +45,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
           this.isRequesting = false;
           if (result) {
             console.log('User successfully logged in');
+            this.router.navigate(['/dashboard/home']);
           }
         },
         errors => {

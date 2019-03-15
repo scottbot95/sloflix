@@ -11,11 +11,13 @@ import { routing } from './app.routing';
 import { AccountModule } from './account/account.module';
 import { ConfigService } from './shared/services/config.service';
 import { HttpClientModule } from '@angular/common/http';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [AppComponent, NavMenuComponent, HomeComponent],
   imports: [
     AccountModule,
+    DashboardModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
