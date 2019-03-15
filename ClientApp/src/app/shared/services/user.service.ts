@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 import { ConfigService } from './config.service';
 import { BaseService } from './base.service';
-import { UserRegistration } from '../models/user.registration.interface';
-import '../../rxjs-operators';
 
 @Injectable()
 export class UserService extends BaseService {
@@ -18,48 +16,62 @@ export class UserService extends BaseService {
 
   private loggedIn = false;
 
-  constructor(private http: Http, private configService: ConfigService) {
+  constructor(private http: HttpClient, private configService: ConfigService) {
     super();
     this.loggedIn = !!localStorage.getItem('auth_token');
     this._authNavStatusSource.next(this.loggedIn);
-    this.baseUrl = configService.getApiURI();
+    this.baseUrl = configService.getAuthURI();
   }
 
-  register(email: string, password: string): Observable<UserRegistration> {
-    let body = JSON.stringify({ email, password });
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers });
+  register(email: string, password: string): Observable<Object> {
+    const body = { email, password };
 
-    return this.http
-      .post(this.baseUrl + '/auth/accounts', body, options)
-      .map(res => true)
-      .catch(this.handleError);
+    const response = this.http.post(this.baseUrl, body);
+    response.subscribe({
+      error: error => this.handleError(error)
+    });
+
+    return response;
   }
 
   login(email: string, password: string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    const body = JSON.stringify({ email, password });
-    return this.http
-      .post(this.baseUrl + '/auth/accounts/login', body)
-      .map(res => res.json())
-      .map(res => {
-        localStorage.setItem('auth_token', res.auth_token);
+    const body = { email, password };
+    const response = this.http.post<AuthenticationResponse>(
+      this.baseUrl + '/auth/accounts/login',
+      body
+    );
+
+    response.subscribe(
+      (data: AuthenticationResponse) => {
+        localStorage.setItem('auth_token', data.auth_token);
         this.loggedIn = true;
         this._authNavStatusSource.next(true);
-        return true;
-      })
-      .catch(this.handleError);
+      },
+      error => this.handleError(error)
+    );
+
+    return response;
   }
 
   logout() {
     localStorage.removeItem('auth_token');
     this.loggedIn = false;
     this._authNavStatusSource.next(false);
+
+    // This doesn't do anything currently
+    this.http.get(this.baseUrl + '/auth/accounts/logout');
   }
 
   isLoggedIn() {
     return this.loggedIn;
   }
+}
+
+interface AuthenticationResponse {
+  id: string;
+  auth_token: string;
+  expires_in: number;
 }

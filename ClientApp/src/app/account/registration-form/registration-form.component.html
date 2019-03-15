@@ -1,3 +1,80 @@
-<p>
-  registration-form works!
-</p>
+<div class="row">
+  <div class="col-md-6">
+    <h2>Please enter your information</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <form #f="ngForm" novalidate (ngSubmit)="registerUser(f)">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          required
+          email
+          name="email"
+          class="form-control"
+          placeholder="Email"
+          ngModel
+          #email="ngModel"
+        />
+        <small
+          [hidden]="email.valid || (email.pristine && !submitted)"
+          class="text-danger"
+        >
+          Please enter a valid email address
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          required
+          name="password"
+          class="form-control"
+          placeholder="Password"
+          ngModel
+          #pass="ngModel"
+        />
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          required
+          validateEqual="password"
+          name="confirmPassword"
+          class="form-control"
+          placeholder="Confirm Password"
+          ngModel
+          #confirmPassword="ngModel"
+        />
+        <small
+          [hidden]="
+            confirmPassword.valid || (confirmPassword.pristine && !submitted)
+          "
+          class="text-danger"
+        >
+          Passwords must match
+        </small>
+      </div>
+      <div class="form-group">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="f.invalid || isRequesting"
+        >
+          Sign Up
+        </button>
+      </div>
+
+      <div *ngIf="errors" class="alert alert-danger" role="alert">
+        <strong>Looks like there's an issue!</strong> {{ errors }}
+      </div>
+    </form>
+  </div>
+</div>

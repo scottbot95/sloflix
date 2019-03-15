@@ -1,17 +1,23 @@
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export abstract class BaseService {
   constructor() {}
 
-  protected handleError(error: any) {
+  protected handleError(error: HttpErrorResponse) {
+    if (error instanceof ErrorEvent) {
+      // client-side/network error occurred
+      return throwError(error.message);
+    }
+
     let applicationError = error.headers.get('Application-Error');
 
     if (applicationError) {
-      return Observable.throw(applicationError);
+      return throwError(applicationError);
     }
 
     let modelStateErrors: string = '';
-    let serverError = error.json();
+    let serverError = error.error;
 
     if (!serverError.type) {
       for (let key in serverError) {
@@ -21,6 +27,6 @@ export abstract class BaseService {
     }
 
     modelStateErrors = modelStateErrors === '' ? null : modelStateErrors;
-    return Observable.throw(modelStateErrors || 'Server error');
+    return throwError(modelStateErrors || 'Server error');
   }
 }
