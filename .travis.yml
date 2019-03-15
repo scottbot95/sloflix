@@ -1,0 +1,18 @@
+matrix:
+  include:
+    language: node_js
+    node_js:
+      - node # uses most recent stable version
+    cache: npm # cache install npm packages for faster build times
+    dist: trusty #uses trusty environment
+    sudo: false #when on trusty, uses Docker containers for speed
+    notifications:
+      email:
+        on_success: change # from broken to fixed
+        on_failure: always # always
+    before_install:
+      - cd ClientApp # Move to client folder
+    install:
+      - npm ci # faster, only goes form package-lock.json
+    script:
+      - echo "succuess" # always pass CI for now.
