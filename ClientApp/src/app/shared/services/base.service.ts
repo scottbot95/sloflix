@@ -1,5 +1,7 @@
 import { Observable, throwError } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { ConfigService } from './config.service';
+import { catchError } from 'rxjs/operators';
 
 export abstract class BaseService {
   constructor() {}
