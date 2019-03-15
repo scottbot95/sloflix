@@ -8,7 +8,7 @@ import { BaseService } from './base.service';
 
 @Injectable()
 export class UserService extends BaseService {
-  baseUrl: string = '';
+  private baseUrl: string;
 
   // Observable navItem source
   private _authNavStatusSource = new BehaviorSubject<boolean>(false);
@@ -17,7 +17,10 @@ export class UserService extends BaseService {
 
   private loggedIn = false;
 
-  constructor(private http: HttpClient, private configService: ConfigService) {
+  constructor(
+    protected http: HttpClient,
+    protected configService: ConfigService
+  ) {
     super();
     this.loggedIn = !!localStorage.getItem('auth_token');
     this._authNavStatusSource.next(this.loggedIn);
