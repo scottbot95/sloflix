@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { ConfigService } from './config.service';
 import { BaseService } from './base.service';
@@ -26,12 +27,9 @@ export class UserService extends BaseService {
   register(email: string, password: string): Observable<Object> {
     const body = { email, password };
 
-    const response = this.http.post(this.baseUrl, body);
-    response.subscribe({
-      error: error => this.handleError(error)
-    });
-
-    return response;
+    return this.http
+      .post(this.baseUrl, body)
+      .pipe(catchError(this.handleError));
   }
 
   login(email: string, password: string) {
@@ -39,21 +37,16 @@ export class UserService extends BaseService {
     headers.append('Content-Type', 'application/json');
 
     const body = { email, password };
-    const response = this.http.post<AuthenticationResponse>(
-      this.baseUrl + '/auth/accounts/login',
-      body
-    );
-
-    response.subscribe(
-      (data: AuthenticationResponse) => {
-        localStorage.setItem('auth_token', data.auth_token);
-        this.loggedIn = true;
-        this._authNavStatusSource.next(true);
-      },
-      error => this.handleError(error)
-    );
-
-    return response;
+    return this.http
+      .post<AuthenticationResponse>(this.baseUrl + '/auth/accounts/login', body)
+      .pipe(
+        map((data: AuthenticationResponse) => {
+          localStorage.setItem('auth_token', data.auth_token);
+          this.loggedIn = true;
+          this._authNavStatusSource.next(true);
+        })
+      )
+      .pipe(catchError(this.handleError));
   }
 
   logout() {
@@ -62,7 +55,9 @@ export class UserService extends BaseService {
     this._authNavStatusSource.next(false);
 
     // This doesn't do anything currently
-    this.http.get(this.baseUrl + '/auth/accounts/logout');
+    this.http
+      .get(this.baseUrl + '/auth/accounts/logout')
+      .pipe(catchError(this.handleError));
   }
 
   isLoggedIn() {

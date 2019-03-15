@@ -17,6 +17,7 @@ export abstract class BaseService {
     }
 
     let modelStateErrors: string = '';
+    console.log(error);
     let serverError = error.error;
 
     if (!serverError.type) {
@@ -25,6 +26,8 @@ export abstract class BaseService {
           modelStateErrors += serverError[key] + '\n';
       }
     }
+
+    console.log(modelStateErrors);
 
     modelStateErrors = modelStateErrors === '' ? null : modelStateErrors;
     return throwError(modelStateErrors || 'Server error');
