@@ -70,6 +70,7 @@
         >
           Sign Up
         </button>
+        <app-spinner [isRunning]="isRequesting"></app-spinner>
       </div>
 
       <div *ngIf="errors" class="alert alert-danger" role="alert">

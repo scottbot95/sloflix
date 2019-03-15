@@ -13,12 +13,7 @@ import { ConfigService } from './shared/services/config.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    SpinnerComponent
-  ],
+  declarations: [AppComponent, NavMenuComponent, HomeComponent],
   imports: [
     AccountModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
