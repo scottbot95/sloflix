@@ -20,25 +20,35 @@
         [ngClass]="{ show: isExpanded }"
       >
         <ul class="navbar-nav flex-grow">
-          <li
-            class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/counter']"
-              >Counter</a
-            >
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/fetch-data']"
-              >Fetch data</a
-            >
-          </li>
+          <ng-container *ngIf="isLoggedIn; then loggedIn; else loggedOut">
+          </ng-container>
         </ul>
       </div>
     </div>
   </nav>
 </header>
+
+<ng-template #loggedIn>
+  <li
+    class="nav-item"
+    [routerLinkActive]="['link-active']"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <a class="nav-link text-dark" [routerLink]="['/dashboard']">
+      Home
+    </a>
+  </li>
+  <li class="nav-item" [routerLinkActive]="['link-active']">
+    <a class="nav-link text-dark" [routerLink]="['/logout']">
+      Logout
+    </a>
+  </li>
+</ng-template>
+
+<ng-template #loggedOut>
+  <li class="nav-item" [routerLinkActive]="['link-active']">
+    <a class="nav-link text-dark" [routerLink]="['/login']">
+      Login
+    </a>
+  </li>
+</ng-template>
