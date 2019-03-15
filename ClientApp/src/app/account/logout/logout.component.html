@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-md-6">
+    <div *ngIf="success" class="alert alert-success" role="alert">
+      <strong>Logout successful!</strong> Please
+      <a [routerLink]="['/login']">login</a> to continue browsing
+    </div>
+
+    <div *ngIf="errors" class="alert alert-danger" role="alert">
+      <strong>Oh No!</strong> An error occurred:<br />
+      {{ errors }}
+    </div>
+  </div>
+</div>

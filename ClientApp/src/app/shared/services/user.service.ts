@@ -27,15 +27,16 @@ export class UserService extends BaseService {
     this.baseUrl = configService.getAuthURI();
   }
 
-  register(email: string, password: string): Observable<Object> {
+  register(email: string, password: string): Observable<boolean> {
     const body = { email, password };
 
     return this.http
       .post(this.baseUrl, body)
+      .pipe(map(data => true))
       .pipe(catchError(this.handleError));
   }
 
-  login(email: string, password: string) {
+  login(email: string, password: string): Observable<boolean> {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
@@ -53,18 +54,20 @@ export class UserService extends BaseService {
       .pipe(catchError(this.handleError));
   }
 
-  logout() {
+  logout(): Observable<boolean> {
     localStorage.removeItem('auth_token');
     this.loggedIn = false;
     this._authNavStatusSource.next(false);
 
     // This doesn't do anything currently
-    this.http
+    return this.http
       .get(this.baseUrl + '/auth/accounts/logout')
-      .pipe(catchError(this.handleError));
+      .pipe(map(data => true))
+      .pipe(catchError(err => of(false)));
+    // .pipe(catchError(this.handleError));
   }
 
-  isLoggedIn() {
+  isLoggedIn(): boolean {
     return this.loggedIn;
   }
 }
