@@ -38,7 +38,7 @@ export class UserService extends BaseService {
 
     const body = { email, password };
     return this.http
-      .post<AuthenticationResponse>(this.baseUrl + '/auth/accounts/login', body)
+      .post<AuthenticationResponse>(this.baseUrl + '/login', body)
       .pipe(
         map((data: AuthenticationResponse) => {
           localStorage.setItem('auth_token', data.auth_token);

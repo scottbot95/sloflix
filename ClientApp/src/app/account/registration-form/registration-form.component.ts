@@ -21,7 +21,6 @@ export class RegistrationFormComponent {
     this.isRequesting = true;
     this.errors = '';
     if (valid) {
-      console.log('"Sending" registration data"', value);
       this.userService.register(value.email, value.password).subscribe(
         result => {
           this.isRequesting = false;

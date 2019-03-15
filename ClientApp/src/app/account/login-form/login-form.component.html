@@ -1,3 +1,61 @@
-<p>
-  login-form works!
-</p>
+<div class="row">
+  <div class="col-md-6">
+    <div *ngIf="brandNew" class="alert alert-success" role="alert">
+      <strong>All set!</strong> Please login with your account
+    </div>
+    <h2>Login</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <form #f="ngForm" novalidate (ngSubmit)="loginUser(f)">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          required
+          email
+          name="email"
+          class="form-control"
+          placeholder="Email"
+          [ngModel]="credentials.email"
+          #email="ngModel"
+        />
+        <small
+          [hidden]="email.valid || (email.pristine && !submitted)"
+          class="text-danger"
+          >Please enter a valid email address</small
+        >
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          required
+          class="form-control"
+          placeholder="Password"
+          [ngModel]="credentials.password"
+        />
+      </div>
+      <div class="form-group">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="f.invalid || isRequesting"
+        >
+          Sign Up
+        </button>
+        <app-spinner [isRunning]="isRequesting"></app-spinner>
+      </div>
+
+      <div *ngIf="errors" class="alert alert-danger" role="alert">
+        <strong>Looks like there's an issue!</strong><br />
+        {{ errors }}
+      </div>
+    </form>
+  </div>
+</div>
