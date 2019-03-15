@@ -47,6 +47,7 @@ export class UserService extends BaseService {
           localStorage.setItem('auth_token', data.auth_token);
           this.loggedIn = true;
           this._authNavStatusSource.next(true);
+          return true;
         })
       )
       .pipe(catchError(this.handleError));

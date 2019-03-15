@@ -43,6 +43,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       this.userService.login(value.email, value.password).subscribe(
         result => {
           this.isRequesting = false;
+          console.log(result);
           if (result) {
             console.log('User successfully logged in');
             this.router.navigate(['/dashboard/home']);
