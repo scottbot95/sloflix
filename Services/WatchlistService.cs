@@ -81,7 +81,10 @@ namespace sloflix.Services
 
     public void RemoveMovieFromList(int watchlistId, int movieId)
     {
-      throw new System.NotImplementedException();
+      var watchlistItem = new WatchlistItem { WatchlistId = watchlistId, MovieId = movieId };
+      _dataContext.Attach<WatchlistItem>(watchlistItem);
+      _dataContext.Remove<WatchlistItem>(watchlistItem);
+      _dataContext.SaveChanges();
     }
 
     public async Task<Watchlist> RenameAsync(int watchlistId, string name)
