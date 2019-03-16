@@ -41,17 +41,26 @@ namespace sloflix.Controllers
 
     // GET /api/watchlist
     [HttpGet]
-    public async Task<ActionResult<List<WatchlistDto>>> Get()
+    public async Task<ActionResult<List<WatchlistDetailsDto>>> Get()
     {
       var userId = _caller.Claims.Single(c => c.Type == "id");
       var watchlists = await _watchlistService.GetAllFromClaimAsync(userId);
 
-      return new OkObjectResult(_mapper.Map<List<WatchlistDto>>(watchlists));
+      return new OkObjectResult(_mapper.Map<List<WatchlistSummaryDto>>(watchlists));
+      // return new OkObjectResult(watchlists);
+    }
+
+    // GET /api/watchlist/{id}
+    [HttpGet("{watchlistId?}")]
+    public async Task<ActionResult<WatchlistDetailsDto>> GetDetails(int watchlistId)
+    {
+      var watchlist = await _watchlistService.GetWatchlist(watchlistId);
+      return new OkObjectResult(_mapper.Map<WatchlistDetailsDto>(watchlist));
     }
 
     // POST /api/watchlist
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody]WatchlistDto dto)
+    public async Task<IActionResult> Post([FromBody]WatchlistDetailsDto dto)
     {
       var name = dto.name;
       if (string.IsNullOrWhiteSpace(name))
@@ -73,11 +82,11 @@ namespace sloflix.Controllers
       await _dataContext.AddAsync(watchlist);
       await _dataContext.SaveChangesAsync();
 
-      return new OkObjectResult(_mapper.Map<WatchlistDto>(watchlist)); ;
+      return new OkObjectResult(_mapper.Map<WatchlistDetailsDto>(watchlist)); ;
     }
 
     // DELETE /api/watchlist/{id}
-    [HttpDelete("{watchlistId}")]
+    [HttpDelete("{watchlistId?}")]
     public IActionResult Delete(int watchlistId)
     {
       _watchlistService.Delete(watchlistId);
@@ -85,7 +94,7 @@ namespace sloflix.Controllers
     }
 
     // PUT /api/watchlist/{id}
-    [HttpPut("{watchlistId}")]
+    [HttpPut("{watchlistId?}")]
     public async Task<ActionResult<Watchlist>> Put(int watchlistId, [FromBody]MovieDto dto)
     {
       var movie = _mapper.Map<Movie>(dto);
@@ -94,6 +103,7 @@ namespace sloflix.Controllers
       {
         return new BadRequestObjectResult(Errors.AddErrorToModelState("Watchlist doesn't exist", ModelState));
       }
+
       return new OkObjectResult(watchlist);
     }
   }
