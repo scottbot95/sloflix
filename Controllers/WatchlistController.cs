@@ -46,7 +46,7 @@ namespace sloflix.Controllers
     /// </summary>
     public async Task<ActionResult<List<WatchlistSummaryDto>>> Get()
     {
-      var userId = _caller.Claims.Single(c => c.Type == "id");
+      var userId = GetUserId();
       var watchlists = await _watchlistService.GetAllFromClaimAsync(userId);
 
       return new OkObjectResult(_mapper.Map<List<WatchlistSummaryDto>>(watchlists));
@@ -80,7 +80,7 @@ namespace sloflix.Controllers
       }
 
       var watchlist = _mapper.Map<Watchlist>(dto);
-      var userId = _caller.Claims.Single(c => c.Type == "id");
+      var userId = GetUserId();
       var watcher = await _dataContext.MovieWatchers.SingleOrDefaultAsync(w => w.IdentityId == userId.Value);
       if (watcher == null)
       {
@@ -132,6 +132,11 @@ namespace sloflix.Controllers
     {
       _watchlistService.RemoveMovieFromList(watchlistId, movieId);
       return Ok();
+    }
+
+    private Claim GetUserId()
+    {
+      return _caller.Claims.Single(c => c.Type == "id");
     }
   }
 }
