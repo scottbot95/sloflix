@@ -41,7 +41,10 @@ namespace sloflix.Controllers
 
     // GET /api/watchlist
     [HttpGet]
-    public async Task<ActionResult<List<WatchlistDetailsDto>>> Get()
+    /// <summary>
+    /// Returns a list of all watchlists currently created by the user
+    /// </summary>
+    public async Task<ActionResult<List<WatchlistSummaryDto>>> Get()
     {
       var userId = _caller.Claims.Single(c => c.Type == "id");
       var watchlists = await _watchlistService.GetAllFromClaimAsync(userId);
@@ -51,15 +54,22 @@ namespace sloflix.Controllers
     }
 
     // GET /api/watchlist/{id}
-    [HttpGet("{watchlistId?}")]
+    [HttpGet("{watchlistId}")]
+    /// <summary>
+    /// Returns details (eager load movie details) for a specific watchlist
+    /// </summary>
     public async Task<ActionResult<WatchlistDetailsDto>> GetDetails(int watchlistId)
     {
-      var watchlist = await _watchlistService.GetWatchlist(watchlistId);
+      var watchlist = await _watchlistService.GetWatchlistAsync(watchlistId);
       return new OkObjectResult(_mapper.Map<WatchlistDetailsDto>(watchlist));
     }
 
     // POST /api/watchlist
     [HttpPost]
+    /// <summary>
+    /// Create a new watchlist for the logged in user with provided details
+    /// Optionally can take a list of movies to instantiate the list with
+    /// </summary>
     public async Task<IActionResult> Post([FromBody]WatchlistDetailsDto dto)
     {
       var name = dto.name;
@@ -86,7 +96,10 @@ namespace sloflix.Controllers
     }
 
     // DELETE /api/watchlist/{id}
-    [HttpDelete("{watchlistId?}")]
+    [HttpDelete("{watchlistId}")]
+    /// <summary>
+    /// Delete the specified watchlist
+    /// </summary>
     public IActionResult Delete(int watchlistId)
     {
       _watchlistService.Delete(watchlistId);
@@ -94,8 +107,11 @@ namespace sloflix.Controllers
     }
 
     // PUT /api/watchlist/{id}
-    [HttpPut("{watchlistId?}")]
-    public async Task<ActionResult<Watchlist>> Put(int watchlistId, [FromBody]MovieDto dto)
+    [HttpPut("{watchlistId}")]
+    /// <summary>
+    /// Add a movie to an existing watchlist
+    /// </summary>
+    public async Task<ActionResult<Watchlist>> AddMovie(int watchlistId, [FromBody]MovieDto dto)
     {
       var movie = _mapper.Map<Movie>(dto);
       var watchlist = await _watchlistService.AddMovieToListAsync(watchlistId, movie);
@@ -105,6 +121,17 @@ namespace sloflix.Controllers
       }
 
       return new OkObjectResult(watchlist);
+    }
+
+    // DELETE /api/watchlist/{watchlistId}/{movieId}
+    [HttpDelete("{watchlistId}/{movieId}")]
+    /// <summary>
+    /// Remove a movie from the watchlist
+    /// </summary>
+    public IActionResult RemoveMovie(int watchlistId, int movieId)
+    {
+      _watchlistService.RemoveMovieFromList(watchlistId, movieId);
+      return Ok();
     }
   }
 }
