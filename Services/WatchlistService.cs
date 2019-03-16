@@ -34,7 +34,7 @@ namespace sloflix.Services
       {
         watchlist.Movies = new List<WatchlistItem>();
       }
-      watchlist.Movies.Add(new WatchlistItem { Movie = movie, Watchlist = watchlist });
+      watchlist.Movies.Add(new WatchlistItem { Movie = movie, WatchlistId = watchlist.Id });
       await _dataContext.SaveChangesAsync();
       return watchlist;
     }
@@ -66,14 +66,17 @@ namespace sloflix.Services
       var watcher = await _dataContext.MovieWatchers
           .Include(w => w.Identity)
           .Include(w => w.Watchlists)
+          .Include("Watchlists.Movies")
           .SingleAsync(w => w.Identity.Id == claim.Value);
 
-      return watcher.Watchlists;
+      return watcher.Watchlists.ToList();
     }
 
-    public Watchlist GetWatchlist(int watchlistId)
+    public Task<Watchlist> GetWatchlist(int watchlistId)
     {
-      return _dataContext.Watchlists.Single(list => list.Id == watchlistId);
+      return _dataContext.Watchlists
+          .Include("Movies.Movie")
+          .SingleAsync(list => list.Id == watchlistId);
     }
 
     public void RemoveMovieFromList(int watchlistId, int movieId)

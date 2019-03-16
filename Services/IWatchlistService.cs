@@ -9,7 +9,7 @@ namespace sloflix.Services
   public interface IWatchlistService
   {
     Task<List<Watchlist>> GetAllFromClaimAsync(Claim claim);
-    Watchlist GetWatchlist(int watcherlistId);
+    Task<Watchlist> GetWatchlist(int watcherlistId);
     Task<Watchlist> CreateAsync(int watcherId, Watchlist watchlist);
     Task<Watchlist> RenameAsync(int watchlistId, string name);
     Task<Watchlist> AddMovieToListAsync(int watchlistId, Movie movie);
