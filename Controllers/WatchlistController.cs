@@ -76,11 +76,25 @@ namespace sloflix.Controllers
       return new OkObjectResult(_mapper.Map<WatchlistDto>(watchlist)); ;
     }
 
+    // DELETE /api/watchlist/{id}
     [HttpDelete("{watchlistId}")]
     public IActionResult Delete(int watchlistId)
     {
       _watchlistService.Delete(watchlistId);
       return new OkResult();
+    }
+
+    // PUT /api/watchlist/{id}
+    [HttpPut("{watchlistId}")]
+    public async Task<ActionResult<Watchlist>> Put(int watchlistId, [FromBody]MovieDto dto)
+    {
+      var movie = _mapper.Map<Movie>(dto);
+      var watchlist = await _watchlistService.AddMovieToListAsync(watchlistId, movie);
+      if (watchlist == null)
+      {
+        return new BadRequestObjectResult(Errors.AddErrorToModelState("Watchlist doesn't exist", ModelState));
+      }
+      return new OkObjectResult(watchlist);
     }
   }
 }

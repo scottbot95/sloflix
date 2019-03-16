@@ -14,6 +14,11 @@ namespace sloflix.Helpers
       return modelState;
     }
 
+    public static ModelStateDictionary AddErrorToModelState(string description, ModelStateDictionary modelState)
+    {
+      return AddErrorToModelState("error", description, modelState);
+    }
+
     public static ModelStateDictionary AddErrorToModelState(string code, string description, ModelStateDictionary modelState)
     {
       modelState.TryAddModelError(code, description);

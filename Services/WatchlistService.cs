@@ -17,9 +17,26 @@ namespace sloflix.Services
       _dataContext = dataContext;
     }
 
-    public Task<Watchlist> AddMovieToListAsync(int watchlistId, Movie movie)
+    public async Task<Watchlist> AddMovieToListAsync(int watchlistId, Movie movie)
     {
-      throw new System.NotImplementedException();
+      var entity = _dataContext.Attach(movie);
+      if (entity.State == EntityState.Added && string.IsNullOrWhiteSpace(movie.Title))
+      {
+        throw new System.ArgumentException("Movie must have a title", "movie");
+      }
+
+      var watchlist = await _dataContext.Watchlists.SingleOrDefaultAsync(list => list.Id == watchlistId);
+      if (watchlist == null)
+      {
+        return null;
+      }
+      if (watchlist.Movies == null)
+      {
+        watchlist.Movies = new List<WatchlistItem>();
+      }
+      watchlist.Movies.Add(new WatchlistItem { Movie = movie, Watchlist = watchlist });
+      await _dataContext.SaveChangesAsync();
+      return watchlist;
     }
 
     public async Task<Watchlist> CreateAsync(int watcherId, Watchlist watchlist)
