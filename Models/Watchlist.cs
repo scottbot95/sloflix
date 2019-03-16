@@ -16,7 +16,7 @@ namespace sloflix.Models
     public int id { get; set; }
     public string name { get; set; }
 
-    public List<WatchListItemDto> movies { get; set; }
+    public List<WatchlistItemDto> movies { get; set; }
   }
 
   public class WatchlistItem
@@ -28,7 +28,7 @@ namespace sloflix.Models
     public Watchlist Watchlist { get; set; }
   }
 
-  public class WatchListItemDto
+  public class WatchlistItemDto
   {
     public MovieDto movie { get; set; }
   }

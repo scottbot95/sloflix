@@ -15,8 +15,8 @@ namespace sloflix.Data
       CreateMap<MovieDto, Movie>();
       CreateMap<Watchlist, WatchlistDto>();
       CreateMap<WatchlistDto, Watchlist>();
-      CreateMap<WatchlistItem, WatchListItemDto>();
-      CreateMap<WatchListItemDto, WatchlistItem>();
+      CreateMap<WatchlistItem, WatchlistItemDto>();
+      CreateMap<WatchlistItemDto, WatchlistItem>();
     }
   }
 }
