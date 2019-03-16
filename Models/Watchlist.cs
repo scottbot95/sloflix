@@ -7,6 +7,7 @@ namespace sloflix.Models
   {
     public int Id { get; set; }
     public string Name { get; set; }
+    public int MovieWatcherId { get; set; }
 
     public List<WatchlistItem> Movies { get; set; }
   }

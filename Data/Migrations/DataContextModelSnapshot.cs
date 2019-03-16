@@ -234,7 +234,7 @@ namespace sloflix.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("MovieWatcherId");
+                    b.Property<int>("MovieWatcherId");
 
                     b.Property<string>("Name");
 
@@ -333,7 +333,8 @@ namespace sloflix.Data.Migrations
                 {
                     b.HasOne("sloflix.Models.MovieWatcher")
                         .WithMany("Watchlists")
-                        .HasForeignKey("MovieWatcherId");
+                        .HasForeignKey("MovieWatcherId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("sloflix.Models.WatchlistItem", b =>
