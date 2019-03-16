@@ -13,7 +13,7 @@ namespace sloflix.Models
   public class MovieWatcherDto
   {
     public int id { get; set; }
-    public List<WatchlistDto> watchlists { get; set; }
+    public List<WatchlistDetailsDto> watchlists { get; set; }
     public AppUserDto identity { get; set; }
   }
 }

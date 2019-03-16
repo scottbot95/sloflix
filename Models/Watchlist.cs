@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace sloflix.Models
 {
@@ -10,14 +11,27 @@ namespace sloflix.Models
     public int MovieWatcherId { get; set; }
 
     public List<WatchlistItem> Movies { get; set; }
+
+    public List<Movie> GetMovies()
+    {
+      return Movies.Select(m => m.Movie).ToList();
+    }
   }
 
-  public class WatchlistDto
+  public class WatchlistDetailsDto
   {
-    public int id { get; set; }
+    public int? id { get; set; }
     public string name { get; set; }
 
-    public List<WatchlistItemDto> movies { get; set; }
+    public List<MovieDto> movies { get; set; }
+  }
+
+  public class WatchlistSummaryDto
+  {
+    public int? id { get; set; }
+    public string name { get; set; }
+
+    public List<int> movies { get; set; }
   }
 
   public class WatchlistItem
@@ -26,7 +40,7 @@ namespace sloflix.Models
     public Movie Movie { get; set; }
 
     public int WatchlistId { get; set; }
-    public Watchlist Watchlist { get; set; }
+
   }
 
   public class WatchlistItemDto

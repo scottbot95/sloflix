@@ -188,7 +188,7 @@ namespace sloflix.Data.Migrations
 
                     b.Property<string>("Summary");
 
-                    b.Property<int>("TMDbId");
+                    b.Property<int?>("TMDbId");
 
                     b.Property<string>("Title")
                         .IsRequired();
@@ -216,15 +216,13 @@ namespace sloflix.Data.Migrations
                 {
                     b.Property<int>("MovieId");
 
-                    b.Property<int>("AppUserId");
+                    b.Property<int>("MovieWatcherId");
 
                     b.Property<int>("Rating");
 
-                    b.Property<string>("UserId");
+                    b.HasKey("MovieId", "MovieWatcherId");
 
-                    b.HasKey("MovieId", "AppUserId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("MovieWatcherId");
 
                     b.ToTable("UserRatings");
                 });
@@ -324,9 +322,10 @@ namespace sloflix.Data.Migrations
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("sloflix.Models.AppUser", "User")
+                    b.HasOne("sloflix.Models.MovieWatcher", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("MovieWatcherId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("sloflix.Models.Watchlist", b =>
