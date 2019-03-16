@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using sloflix.Data;
@@ -13,6 +15,11 @@ namespace sloflix.Services
     public WatchlistService(DataContext dataContext)
     {
       _dataContext = dataContext;
+    }
+
+    public Task<Watchlist> AddMovieToListAsync(int watchlistId, Movie movie)
+    {
+      throw new System.NotImplementedException();
     }
 
     public async Task<Watchlist> CreateAsync(int watcherId, Watchlist watchlist)
@@ -37,14 +44,24 @@ namespace sloflix.Services
       _dataContext.SaveChanges();
     }
 
-    public IQueryable<Watchlist> GetAllByUserId(int watcherId)
+    public async Task<List<Watchlist>> GetAllFromClaimAsync(Claim claim)
     {
-      return _dataContext.Watchlists.Where(list => list.MovieWatcherId == watcherId);
+      var watcher = await _dataContext.MovieWatchers
+          .Include(w => w.Identity)
+          .Include(w => w.Watchlists)
+          .SingleAsync(w => w.Identity.Id == claim.Value);
+
+      return watcher.Watchlists;
     }
 
     public Watchlist GetWatchlist(int watchlistId)
     {
       return _dataContext.Watchlists.Single(list => list.Id == watchlistId);
+    }
+
+    public void RemoveMovieFromList(int watchlistId, int movieId)
+    {
+      throw new System.NotImplementedException();
     }
 
     public async Task<Watchlist> RenameAsync(int watchlistId, string name)
@@ -55,9 +72,7 @@ namespace sloflix.Services
       }
 
       var toRename = await _dataContext.Watchlists.SingleAsync(list => list.Id == watchlistId);
-
       toRename.Name = name;
-
       await _dataContext.SaveChangesAsync();
 
       return toRename;
