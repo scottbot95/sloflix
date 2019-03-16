@@ -72,7 +72,7 @@ namespace sloflix.Services
       return watcher.Watchlists.ToList();
     }
 
-    public Task<Watchlist> GetWatchlist(int watchlistId)
+    public Task<Watchlist> GetWatchlistAsync(int watchlistId)
     {
       return _dataContext.Watchlists
           .Include("Movies.Movie")
