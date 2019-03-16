@@ -27,8 +27,8 @@ namespace sloflix.Models
 
   public class UserRating
   {
-    public int AppUserId { get; set; }
-    public AppUser User { get; set; }
+    public int MovieWatcherId { get; set; }
+    public MovieWatcher User { get; set; }
 
     public int MovieId { get; set; }
     public Movie Movie { get; set; }
@@ -40,7 +40,7 @@ namespace sloflix.Models
   public class UserRatingDto
   {
     public int rating { get; set; }
-    public int appUserId { get; set; }
+    public int movieWatcherId { get; set; }
     public int movieId { get; set; }
   }
 }

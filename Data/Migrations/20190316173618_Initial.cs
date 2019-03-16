@@ -193,14 +193,13 @@ namespace sloflix.Data.Migrations
                 name: "UserRatings",
                 columns: table => new
                 {
-                    AppUserId = table.Column<int>(nullable: false),
+                    MovieWatcherId = table.Column<int>(nullable: false),
                     MovieId = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
                     Rating = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRatings", x => new { x.MovieId, x.AppUserId });
+                    table.PrimaryKey("PK_UserRatings", x => new { x.MovieId, x.MovieWatcherId });
                     table.ForeignKey(
                         name: "FK_UserRatings_Movies_MovieId",
                         column: x => x.MovieId,
@@ -208,11 +207,11 @@ namespace sloflix.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRatings_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_UserRatings_MovieWatchers_MovieWatcherId",
+                        column: x => x.MovieWatcherId,
+                        principalTable: "MovieWatchers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -302,9 +301,9 @@ namespace sloflix.Data.Migrations
                 column: "IdentityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRatings_UserId",
+                name: "IX_UserRatings_MovieWatcherId",
                 table: "UserRatings",
-                column: "UserId");
+                column: "MovieWatcherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WatchlistItems_WatchlistId",

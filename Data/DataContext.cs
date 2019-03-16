@@ -25,7 +25,7 @@ namespace sloflix.Data
         HasKey(m => new { m.MovieId, m.WatchlistId });
 
       modelBuilder.Entity<UserRating>().
-        HasKey(r => new { r.MovieId, r.AppUserId });
+        HasKey(r => new { r.MovieId, r.MovieWatcherId });
     }
   }
 }
