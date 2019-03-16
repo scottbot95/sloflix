@@ -57,7 +57,7 @@ namespace sloflix.Data.Migrations
                     Title = table.Column<string>(nullable: false),
                     Summary = table.Column<string>(nullable: true),
                     PosterPath = table.Column<string>(nullable: true),
-                    TMDbId = table.Column<int>(nullable: false)
+                    TMDbId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -222,7 +222,7 @@ namespace sloflix.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    MovieWatcherId = table.Column<int>(nullable: true)
+                    MovieWatcherId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -232,7 +232,7 @@ namespace sloflix.Data.Migrations
                         column: x => x.MovieWatcherId,
                         principalTable: "MovieWatchers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

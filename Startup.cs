@@ -95,9 +95,13 @@ namespace sloflix
 
       services.Configure<JwtIssuerOptions>(options =>
       {
+        double validFor = 300.0;
+        double.TryParse(jwtAppSettingsOptions[nameof(JwtIssuerOptions.ValidFor)], out validFor);
+
         options.Issuer = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Issuer)];
         options.Audience = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Audience)];
         options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+        options.ValidFor = TimeSpan.FromSeconds(validFor);
       });
 
 
@@ -136,6 +140,8 @@ namespace sloflix
                                         Constants.Strings.JwtClaims.ApiAccess)
         )
       );
+
+      services.AddScoped<IWatchlistService, WatchlistService>();
 
     }
 

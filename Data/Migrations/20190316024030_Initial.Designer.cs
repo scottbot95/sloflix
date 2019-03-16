@@ -9,7 +9,7 @@ using sloflix.Data;
 namespace sloflix.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190313215139_Initial")]
+    [Migration("20190316024030_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -236,7 +236,7 @@ namespace sloflix.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("MovieWatcherId");
+                    b.Property<int>("MovieWatcherId");
 
                     b.Property<string>("Name");
 
@@ -335,7 +335,8 @@ namespace sloflix.Data.Migrations
                 {
                     b.HasOne("sloflix.Models.MovieWatcher")
                         .WithMany("Watchlists")
-                        .HasForeignKey("MovieWatcherId");
+                        .HasForeignKey("MovieWatcherId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("sloflix.Models.WatchlistItem", b =>

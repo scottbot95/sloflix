@@ -11,7 +11,7 @@ namespace sloflix.Models
     public string Title { get; set; }
     public string Summary { get; set; }
     public string PosterPath { get; set; }
-    public int TMDbId { get; set; }
+    public int? TMDbId { get; set; }
 
     public List<UserRating> UserRatings { get; set; }
   }
@@ -22,7 +22,7 @@ namespace sloflix.Models
     public string title { get; set; }
     public string summary { get; set; }
     public string posterPath { get; set; }
-    public int tmdbId { get; set; }
+    public int? tmdbId { get; set; }
   }
 
   public class UserRating
@@ -40,5 +40,7 @@ namespace sloflix.Models
   public class UserRatingDto
   {
     public int rating { get; set; }
+    public int appUserId { get; set; }
+    public int movieId { get; set; }
   }
 }
