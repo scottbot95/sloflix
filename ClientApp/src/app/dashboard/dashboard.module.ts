@@ -6,10 +6,11 @@ import { routing } from './dashboard.routing';
 import { SharedModule } from '../shared/shared.module';
 import { AuthGuard } from '../auth.guard';
 import { WatchlistService } from '../shared/services/watchlist.service';
+import { WatchlistsGridComponent } from './watchlists-grid/watchlists-grid.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, routing, SharedModule],
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, WatchlistsGridComponent],
   providers: [AuthGuard, WatchlistService]
 })
 export class DashboardModule {}
