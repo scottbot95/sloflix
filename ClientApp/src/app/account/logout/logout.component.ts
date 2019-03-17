@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../shared/services/user.service';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-logout',
@@ -9,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class LogoutComponent implements OnInit {
   success: boolean = false;
+  isRequesting: boolean = true;
+  complete: boolean = false;
   errors: string;
 
   constructor(private userService: UserService, private router: Router) {}
@@ -18,14 +21,22 @@ export class LogoutComponent implements OnInit {
   }
 
   logout() {
-    this.userService.logout().subscribe(
-      success => {
-        this.success = true;
-      },
-      errors => {
-        this.errors = errors;
-        this.success = false;
-      }
-    );
+    this.isRequesting = true;
+    this.userService
+      .logout()
+      .pipe(
+        finalize(() => {
+          this.isRequesting = false;
+        })
+      )
+      .subscribe(
+        success => {
+          this.success = true;
+        },
+        errors => {
+          this.errors = errors;
+          this.success = false;
+        }
+      );
   }
 }

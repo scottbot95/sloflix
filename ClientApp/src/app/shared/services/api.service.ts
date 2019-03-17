@@ -8,7 +8,7 @@ import {
 import { ConfigService } from './config.service';
 import { BaseService } from './base.service';
 import { catchError } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, empty } from 'rxjs';
 import { UserService } from './user.service';
 
 export abstract class ApiService extends BaseService {
@@ -58,6 +58,7 @@ export abstract class ApiService extends BaseService {
     console.warn(error);
     if (error.status === 401) {
       this.userService.logout();
+      return empty();
     } else {
       return throwError(error);
     }

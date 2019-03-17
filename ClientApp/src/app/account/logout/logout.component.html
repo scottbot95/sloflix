@@ -1,13 +1,32 @@
 <div class="row">
   <div class="col-md-6">
-    <div *ngIf="success" class="alert alert-success" role="alert">
-      <strong>Logout successful!</strong> Please
-      <a [routerLink]="['/login']">login</a> to continue browsing
-    </div>
+    <app-spinner [isRunning]="isRequesting"></app-spinner>
+    <ng-container *ngIf="!isRequesting">
+      <div *ngIf="success" class="alert alert-success" role="alert">
+        <strong>Logout successful!</strong> Please
+        <a [routerLink]="['/login']">login</a> to continue browsing
+      </div>
 
-    <div *ngIf="errors" class="alert alert-danger" role="alert">
-      <strong>Oh No!</strong> An error occurred:<br />
-      {{ errors }}
-    </div>
+      <div *ngIf="!success" class="alert alert-danger" role="alert">
+        <strong>Oh No!</strong> An error occurred:<br />
+        <ng-container *ngIf="errors; then errorDetails; else unknownError">
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
 </div>
+
+<ng-template>
+  <div class="alert alert-success" role="alert" #successMessage>
+    <strong>Logout successful!</strong> Please
+    <a [routerLink]="['/login']">login</a> to continue browsing
+  </div>
+</ng-template>
+
+<ng-template #errorDetails>
+  {{ errors }}
+</ng-template>
+
+<ng-template #unknownError>
+  Unknown error
+</ng-template>

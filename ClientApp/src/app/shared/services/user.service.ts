@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
+import { Observable, BehaviorSubject, of, throwError, empty } from 'rxjs';
 import { catchError, map, finalize } from 'rxjs/operators';
 
 import { ConfigService } from './config.service';
@@ -62,19 +62,22 @@ export class UserService extends BaseService {
       .get(this.baseUrl + '/auth/accounts/logout')
       .pipe(map(data => true))
       .pipe(
-        catchError(err => {
-          if (err.status !== 404) return throwError(err);
-        })
-      )
-      .pipe(catchError(this.handleError))
-      .pipe(
         finalize(() => {
           localStorage.removeItem('auth_token');
           this.loggedIn = false;
           this._authNavStatusSource.next(false);
           this._authTokenSource.next(null);
         })
-      );
+      )
+      .pipe(
+        catchError(err => {
+          // we expect a 404 currently so this isnt a problem
+          // it will still print an error in the conosle though
+          if (err.status !== 404) return throwError(err);
+          return of(true);
+        })
+      )
+      .pipe(catchError(this.handleError));
   }
 
   isLoggedIn(): boolean {
