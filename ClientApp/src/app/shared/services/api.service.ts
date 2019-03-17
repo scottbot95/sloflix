@@ -1,41 +1,65 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpErrorResponse
+} from '@angular/common/http';
 
 import { ConfigService } from './config.service';
 import { BaseService } from './base.service';
 import { catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { UserService } from './user.service';
 
 export abstract class ApiService extends BaseService {
   private baseUrl: string;
-  private httpOptions: object;
+  private httpOptions: { headers: HttpHeaders };
 
   constructor(
     protected http: HttpClient,
-    protected configService: ConfigService
+    protected configService: ConfigService,
+    protected userService: UserService
   ) {
     super();
     this.baseUrl = configService.getApiURI();
 
-    const authToken = localStorage.getItem('auth_token');
-
     this.httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`
+        'Content-Type': 'application/json'
       })
     };
+
+    this.userService.authToken$.subscribe(token => {
+      if (token !== null) {
+        this.httpOptions.headers.set('Authorization', `Bearer ${token}`);
+      } else {
+        this.httpOptions.headers.delete('Authorization');
+      }
+    });
+
+    this.handleAuthError = this.handleAuthError.bind(this);
   }
 
   protected get(url: string): Observable<any> {
     return this.http
       .get(this.baseUrl + url, this.httpOptions)
+      .pipe(catchError(this.handleAuthError))
       .pipe(catchError(this.handleError));
   }
 
   protected post(url: string, body: any): Observable<any> {
     return this.http
       .post(this.baseUrl + url, body, this.httpOptions)
+      .pipe(catchError(this.handleAuthError))
       .pipe(catchError(this.handleError));
+  }
+
+  private handleAuthError(error: HttpErrorResponse) {
+    console.warn(error);
+    if (error.status === 401) {
+      this.userService.logout();
+    } else {
+      return throwError(error);
+    }
   }
 }

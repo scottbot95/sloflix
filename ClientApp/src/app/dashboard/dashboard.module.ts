@@ -8,10 +8,19 @@ import { MaterialModule } from '../shared/app.material.module';
 import { AuthGuard } from '../auth.guard';
 import { WatchlistService } from '../shared/services/watchlist.service';
 import { WatchlistsGridComponent } from './watchlists-grid/watchlists-grid.component';
+import { CardListModule } from '../shared/card-list/card-list.module';
+import { UserService } from '../shared/services/user.service';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, routing, SharedModule, MaterialModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    routing,
+    SharedModule,
+    MaterialModule,
+    CardListModule
+  ],
   declarations: [HomeComponent, WatchlistsGridComponent],
-  providers: [AuthGuard, WatchlistService]
+  providers: [AuthGuard, UserService, WatchlistService]
 })
 export class DashboardModule {}

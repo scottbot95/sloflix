@@ -3,6 +3,7 @@ import { Credentials } from '../../shared/models/credentials.interface';
 import { UserService } from '../../shared/services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-form',
@@ -40,20 +41,25 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.isRequesting = true;
     this.errors = '';
     if (valid) {
-      this.userService.login(value.email, value.password).subscribe(
-        result => {
-          this.isRequesting = false;
-          console.log(result);
-          if (result) {
-            console.log('User successfully logged in');
-            this.router.navigate(['/dashboard/home']);
+      this.userService
+        .login(value.email, value.password)
+        .pipe(
+          finalize(() => {
+            this.isRequesting = false;
+          })
+        )
+        .subscribe(
+          result => {
+            console.log(result);
+            if (result) {
+              console.log('User successfully logged in');
+              this.router.navigate(['/dashboard/home']);
+            }
+          },
+          errors => {
+            this.errors = errors;
           }
-        },
-        errors => {
-          this.errors = errors;
-          this.isRequesting = false;
-        }
-      );
+        );
     }
   }
 }

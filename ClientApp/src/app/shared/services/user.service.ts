@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
+import { catchError, map, finalize } from 'rxjs/operators';
 
 import { ConfigService } from './config.service';
 import { BaseService } from './base.service';
@@ -10,10 +10,11 @@ import { BaseService } from './base.service';
 export class UserService extends BaseService {
   private baseUrl: string;
 
-  // Observable navItem source
   private _authNavStatusSource = new BehaviorSubject<boolean>(false);
-  // Observable navItem stream
   authNavStatus$ = this._authNavStatusSource.asObservable();
+
+  private _authTokenSource = new BehaviorSubject<string>(null);
+  authToken$ = this._authTokenSource.asObservable();
 
   private loggedIn = false;
 
@@ -48,6 +49,7 @@ export class UserService extends BaseService {
           localStorage.setItem('auth_token', data.auth_token);
           this.loggedIn = true;
           this._authNavStatusSource.next(true);
+          this._authTokenSource.next(data.auth_token);
           return true;
         })
       )
@@ -55,16 +57,24 @@ export class UserService extends BaseService {
   }
 
   logout(): Observable<boolean> {
-    localStorage.removeItem('auth_token');
-    this.loggedIn = false;
-    this._authNavStatusSource.next(false);
-
     // This doesn't do anything currently
     return this.http
       .get(this.baseUrl + '/auth/accounts/logout')
       .pipe(map(data => true))
-      .pipe(catchError(err => of(false)));
-    // .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(err => {
+          if (err.status !== 404) return throwError(err);
+        })
+      )
+      .pipe(catchError(this.handleError))
+      .pipe(
+        finalize(() => {
+          localStorage.removeItem('auth_token');
+          this.loggedIn = false;
+          this._authNavStatusSource.next(false);
+          this._authTokenSource.next(null);
+        })
+      );
   }
 
   isLoggedIn(): boolean {

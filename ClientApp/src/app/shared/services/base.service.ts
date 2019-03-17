@@ -11,6 +11,7 @@ export abstract class BaseService {
       // client-side/network error occurred
       return throwError(error.message);
     }
+    console.warn(error);
 
     let applicationError = error.headers.get('Application-Error');
 
@@ -19,8 +20,11 @@ export abstract class BaseService {
     }
 
     let modelStateErrors: string = '';
-    console.log(error);
     let serverError = error.error;
+
+    if (!serverError) {
+      return throwError(error);
+    }
 
     if (!serverError.type) {
       for (let key in serverError) {
@@ -28,8 +32,6 @@ export abstract class BaseService {
           modelStateErrors += serverError[key] + '\n';
       }
     }
-
-    console.log(modelStateErrors);
 
     modelStateErrors = modelStateErrors === '' ? null : modelStateErrors;
     return throwError(modelStateErrors || 'Server error');
