@@ -23,8 +23,10 @@ export class UserService extends BaseService {
     protected configService: ConfigService
   ) {
     super();
-    this.loggedIn = !!localStorage.getItem('auth_token');
+    const authToken = localStorage.getItem('auth_token');
+    this.loggedIn = !!authToken;
     this._authNavStatusSource.next(this.loggedIn);
+    this._authTokenSource.next(authToken);
     this.baseUrl = configService.getAuthURI();
   }
 
