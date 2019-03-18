@@ -30,7 +30,6 @@ export abstract class ApiService extends BaseService {
     };
 
     this.userService.authToken$.subscribe(token => {
-      console.log('new auth_token', token);
       if (token !== null) {
         this.httpOptions.headers = this.httpOptions.headers.set(
           'Authorization',
@@ -47,7 +46,6 @@ export abstract class ApiService extends BaseService {
   }
 
   protected get(url: string): Observable<any> {
-    console.log(this.httpOptions);
     return this.http
       .get(this.baseUrl + url, this.httpOptions)
       .pipe(catchError(this.handleAuthError))

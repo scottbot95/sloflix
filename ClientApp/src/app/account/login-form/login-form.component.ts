@@ -50,9 +50,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
         )
         .subscribe(
           result => {
-            console.log(result);
             if (result) {
-              console.log('User successfully logged in');
               this.router.navigate(['/dashboard/home']);
             }
           },
