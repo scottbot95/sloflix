@@ -10,6 +10,7 @@ import { WatchlistService } from '../shared/services/watchlist.service';
 import { WatchlistsGridComponent } from './watchlists-grid/watchlists-grid.component';
 import { CardListModule } from '../shared/card-list/card-list.module';
 import { UserService } from '../shared/services/user.service';
+import { ApiService } from '../shared/services/api.service';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { UserService } from '../shared/services/user.service';
     CardListModule
   ],
   declarations: [HomeComponent, WatchlistsGridComponent],
-  providers: [AuthGuard, UserService, WatchlistService]
+  providers: [AuthGuard, UserService, WatchlistService, ApiService]
 })
 export class DashboardModule {}

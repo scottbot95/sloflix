@@ -10,15 +10,18 @@ import { BaseService } from './base.service';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError, empty } from 'rxjs';
 import { UserService } from './user.service';
+import { Router } from '@angular/router';
 
-export abstract class ApiService extends BaseService {
+@Injectable()
+export class ApiService extends BaseService {
   private baseUrl: string;
   private httpOptions: { headers: HttpHeaders };
 
   constructor(
-    protected http: HttpClient,
-    protected configService: ConfigService,
-    protected userService: UserService
+    private http: HttpClient,
+    private configService: ConfigService,
+    private userService: UserService,
+    private router: Router
   ) {
     super();
     this.baseUrl = configService.getApiURI();
@@ -45,14 +48,14 @@ export abstract class ApiService extends BaseService {
     this.handleAuthError = this.handleAuthError.bind(this);
   }
 
-  protected get(url: string): Observable<any> {
+  get(url: string): Observable<any> {
     return this.http
       .get(this.baseUrl + url, this.httpOptions)
       .pipe(catchError(this.handleAuthError))
       .pipe(catchError(this.handleError));
   }
 
-  protected post(url: string, body: any): Observable<any> {
+  post(url: string, body: any): Observable<any> {
     return this.http
       .post(this.baseUrl + url, body, this.httpOptions)
       .pipe(catchError(this.handleAuthError))
@@ -60,9 +63,13 @@ export abstract class ApiService extends BaseService {
   }
 
   private handleAuthError(error: HttpErrorResponse) {
-    console.warn(error);
     if (error.status === 401) {
-      this.userService.logout();
+      const authError = error.headers.get('www-authenticate');
+      const queryParams = {};
+      if (authError.endsWith('"The token is expired"')) {
+        queryParams['expired'] = true;
+      }
+      this.router.navigate(['/logout'], { queryParams });
       return empty();
     } else {
       return throwError(error);
