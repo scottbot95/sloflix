@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CardListItem } from './card-list-item.interface';
+import { CardDetails } from '../components/card/card.component';
 
 @Component({
   selector: 'app-card-list',
@@ -7,7 +7,7 @@ import { CardListItem } from './card-list-item.interface';
   styleUrls: ['./card-list.component.css']
 })
 export class CardListComponent implements OnInit {
-  @Input() cardItems: CardListItem[];
+  @Input() cardItems: CardDetails[];
 
   constructor() {}
 

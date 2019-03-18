@@ -7,8 +7,8 @@ import {
 } from '@angular/material';
 import { MaterialModule } from '../app.material.module';
 import { CardListComponent } from './card-list.component';
-import { CardListItemComponent } from './card-list-item/card-list-item.component';
 import { SharedModule } from '../shared.module';
+import { CardModule } from '../components/card/card.module';
 
 @NgModule({
   imports: [
@@ -17,9 +17,10 @@ import { SharedModule } from '../shared.module';
     MatCardModule,
     MatGridListModule,
     MatIconModule,
-    SharedModule
+    SharedModule,
+    CardModule
   ],
-  declarations: [CardListComponent, CardListItemComponent],
+  declarations: [CardListComponent],
   exports: [CardListComponent]
 })
 export class CardListModule {}

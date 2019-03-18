@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 
 @Component({
-  selector: 'app-card-list-item',
-  templateUrl: './card-list-item.component.html',
-  styleUrls: ['./card-list-item.component.css']
+  selector: 'app-card',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.css']
 })
-export class CardListItemComponent {
-  private _card: CardListItem;
+export class CardComponent {
+  private _card: CardDetails;
   private id: string;
   private title: string;
   private subtitle: string;
@@ -16,12 +16,12 @@ export class CardListItemComponent {
   private content: string;
   private actions: CardAction[];
 
-  public get card(): CardListItem {
+  public get card(): CardDetails {
     return this._card;
   }
 
   @Input()
-  public set card(card: CardListItem) {
+  public set card(card: CardDetails) {
     this._card = card;
     this.id = card.id;
     this.title = card.title;
@@ -35,7 +35,7 @@ export class CardListItemComponent {
   constructor() {}
 }
 
-export interface CardListItem {
+export interface CardDetails {
   id: string;
   title?: string;
   subtitle?: string;
