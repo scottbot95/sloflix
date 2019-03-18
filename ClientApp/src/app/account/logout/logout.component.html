@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row justify-content-center">
   <div class="col-md-6">
     <app-spinner [isRunning]="isRequesting"></app-spinner>
     <ng-container *ngIf="!isRequesting">
@@ -7,7 +7,7 @@
         <a [routerLink]="['/login']">login</a> to continue browsing
       </div>
 
-      <div *ngIf="!success" class="alert alert-danger" role="alert">
+      <div *ngIf="!success || errors" class="alert alert-danger" role="alert">
         <strong>Oh No!</strong> An error occurred:<br />
         <ng-container *ngIf="errors; then errorDetails; else unknownError">
         </ng-container>
