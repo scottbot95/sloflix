@@ -108,13 +108,27 @@ namespace sloflix.Controllers
 
     // PUT /api/watchlists/{id}
     [HttpPut("{watchlistId}")]
+    public async Task<ActionResult<WatchlistSummaryDto>> UpdateWatchlist(int watchlistId, [FromBody] WatchlistSummaryDto dto)
+    {
+      var newName = dto.name;
+      if (string.IsNullOrWhiteSpace(newName))
+      {
+        return new BadRequestObjectResult(Errors.AddErrorToModelState("", ModelState));
+      }
+
+      var watchlist = await _watchlistService.RenameAsync(GetUserId(), watchlistId, newName);
+
+      return new OkObjectResult(watchlist);
+    }
+
+    // PUT /api/watchlists/{id}/{movieId}
+    [HttpPut("{watchlistId}/{movieId}")]
     /// <summary>
     /// Add a movie to an existing watchlist
     /// </summary>
-    public async Task<ActionResult<Watchlist>> AddMovie(int watchlistId, [FromBody]MovieDto dto)
+    public async Task<ActionResult<Watchlist>> AddMovie(int watchlistId, int movieId)
     {
-      var movie = _mapper.Map<Movie>(dto);
-      var watchlist = await _watchlistService.AddMovieToListAsync(GetUserId(), watchlistId, movie);
+      var watchlist = await _watchlistService.AddMovieToListAsync(GetUserId(), watchlistId, movieId);
       if (watchlist == null)
       {
         return new BadRequestObjectResult(Errors.AddErrorToModelState("Watchlist doesn't exist", ModelState));

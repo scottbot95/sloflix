@@ -17,14 +17,13 @@ namespace sloflix.Services
       _dataContext = dataContext;
     }
 
-    public async Task<Watchlist> AddMovieToListAsync(Claim userId, int watchlistId, Movie movie)
+    public async Task<Watchlist> AddMovieToListAsync(Claim userId, int watchlistId, int movieId)
     {
-      var entity = _dataContext.Attach(movie);
-      if (entity.State == EntityState.Added && string.IsNullOrWhiteSpace(movie.Title))
+      var movie = await _dataContext.Movies.SingleOrDefaultAsync(m => m.Id == movieId);
+      if (movie == null)
       {
-        throw new System.ArgumentException("Movie must have a title", "movie");
+        throw new System.ArgumentException("movieId must correspond to an existing movie", "movieId");
       }
-
 
       var watchlist = await _dataContext.Watchlists.SingleOrDefaultAsync(list => list.Id == watchlistId);
       if (watchlist == null)
@@ -32,7 +31,7 @@ namespace sloflix.Services
         return null;
       }
 
-      ThrowIfUnauthorized(userId, watchlist);
+      await ThrowIfUnauthorized(userId, watchlist);
 
       if (watchlist.Movies == null)
       {
@@ -64,9 +63,9 @@ namespace sloflix.Services
       return watchlist;
     }
 
-    public void Delete(Claim userId, int watchlistId)
+    public async void Delete(Claim userId, int watchlistId)
     {
-      ThrowIfUnauthorized(userId, watchlistId);
+      await ThrowIfUnauthorized(userId, watchlistId);
       var watchlist = new Watchlist { Id = watchlistId };
       _dataContext.Attach<Watchlist>(watchlist);
       _dataContext.Remove<Watchlist>(watchlist);
@@ -83,18 +82,18 @@ namespace sloflix.Services
       return watcher.Watchlists.ToList();
     }
 
-    public Task<Watchlist> GetWatchlistAsync(Claim userId, int watchlistId)
+    public async Task<Watchlist> GetWatchlistAsync(Claim userId, int watchlistId)
     {
-      ThrowIfUnauthorized(userId, watchlistId);
+      await ThrowIfUnauthorized(userId, watchlistId);
 
-      return _dataContext.Watchlists
+      return await _dataContext.Watchlists
           .Include("Movies.Movie")
           .SingleAsync(list => list.Id == watchlistId);
     }
 
-    public void RemoveMovieFromList(Claim userId, int watchlistId, int movieId)
+    public async void RemoveMovieFromList(Claim userId, int watchlistId, int movieId)
     {
-      ThrowIfUnauthorized(userId, watchlistId);
+      await ThrowIfUnauthorized(userId, watchlistId);
 
       var watchlistItem = new WatchlistItem { WatchlistId = watchlistId, MovieId = movieId };
       _dataContext.Attach<WatchlistItem>(watchlistItem);
@@ -110,7 +109,7 @@ namespace sloflix.Services
       }
 
       var toRename = await _dataContext.Watchlists.SingleAsync(list => list.Id == watchlistId);
-      ThrowIfUnauthorized(userId, toRename);
+      await ThrowIfUnauthorized(userId, toRename);
 
       toRename.Name = name;
       await _dataContext.SaveChangesAsync();
@@ -124,19 +123,19 @@ namespace sloflix.Services
           .SingleOrDefaultAsync(w => w.IdentityId == userId.Value);
     }
 
-    private async void ThrowIfUnauthorized(Claim userId, int watchlistId)
+    private async Task ThrowIfUnauthorized(Claim userId, int watchlistId)
     {
       var watcher = await GetWatcherFromClaim(userId);
-      ThrowIfUnauthorized(watcher.Id, watchlistId);
+      await ThrowIfUnauthorized(watcher.Id, watchlistId);
     }
 
-    private async void ThrowIfUnauthorized(Claim userId, Watchlist watchlist)
+    private async Task ThrowIfUnauthorized(Claim userId, Watchlist watchlist)
     {
       var watcher = await GetWatcherFromClaim(userId);
       ThrowIfUnauthorized(watcher.Id, watchlist);
     }
 
-    private async void ThrowIfUnauthorized(int watcherId, int watchlistId)
+    private async Task ThrowIfUnauthorized(int watcherId, int watchlistId)
     {
       var watchlist = await _dataContext.Watchlists
         .SingleOrDefaultAsync(wl => wl.Id == watchlistId);
