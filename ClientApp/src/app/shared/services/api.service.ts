@@ -65,7 +65,9 @@ export class ApiService extends BaseService {
   private handleAuthError(error: HttpErrorResponse) {
     if (error.status === 401) {
       const authError = error.headers.get('www-authenticate');
-      const queryParams = {};
+      const queryParams = {
+        redirectTo: this.router.url
+      };
       if (authError.endsWith('"The token is expired"')) {
         queryParams['expired'] = true;
       }
