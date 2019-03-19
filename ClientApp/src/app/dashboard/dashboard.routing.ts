@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../auth.guard';
 import { HomeComponent } from './home/home.component';
+import { WatchlistDetailsComponent } from './watchlist-details/watchlist-details.component';
 
 export const routing: ModuleWithProviders = RouterModule.forChild([
   {
@@ -10,7 +11,8 @@ export const routing: ModuleWithProviders = RouterModule.forChild([
     canActivate: [AuthGuard],
     children: [
       { path: '', component: HomeComponent },
-      { path: 'home', component: HomeComponent }
+      { path: 'home', component: HomeComponent },
+      { path: 'watchlist/:id', component: WatchlistDetailsComponent }
     ]
   }
 ]);

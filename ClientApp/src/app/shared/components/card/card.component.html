@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card (click)="handleClick()" [ngClass]="onClick ? 'clickable' : null">
   <mat-card-header *ngIf="title || subtitle || avatar">
     <img *ngIf="avatar" mat-card-avatar [src]="avatar" />
     <mat-card-title *ngIf="title">{{ title }}</mat-card-title>

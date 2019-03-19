@@ -29,9 +29,19 @@ export class WatchlistService {
     this.currentWatchlist$ = this.currentWatchlistSource.asObservable();
   }
 
-  getAllWatchlists(): Observable<WatchlistSummary> {
+  getAllWatchlists(): Observable<WatchlistSummary[]> {
     return this.apiService
       .get('/watchlists')
-      .pipe(tap(data => this.watchlistsSource.next(data)));
+      .pipe(
+        tap((data: WatchlistSummary[]) => this.watchlistsSource.next(data))
+      );
+  }
+
+  getWatchlistDetails(id: number | string): Observable<WatchlistDetails> {
+    return this.apiService
+      .get(`/watchlists/${id}`)
+      .pipe(
+        tap((data: WatchlistDetails) => this.currentWatchlistSource.next(data))
+      );
   }
 }

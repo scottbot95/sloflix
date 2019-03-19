@@ -15,6 +15,7 @@ export class CardComponent {
   private image: string;
   private content: string;
   private actions: CardAction[];
+  private onClick: CardActionHandler;
 
   public get card(): CardDetails {
     return this._card;
@@ -23,30 +24,40 @@ export class CardComponent {
   @Input()
   public set card(card: CardDetails) {
     this._card = card;
-    this.id = card.id;
+    this.id = card.id + '';
     this.title = card.title;
     this.subtitle = card.subtitle;
     this.avatar = card.avatar;
     this.image = card.image;
     this.content = card.content;
     this.actions = card.actions;
+    this.onClick = card.onClick;
   }
 
   constructor() {}
+
+  private handleClick() {
+    if (typeof this.onClick === 'function') {
+      this.onClick(this.id);
+    }
+  }
 }
 
+export type CardActionHandler = (cardId: string) => void;
+
 export interface CardDetails {
-  id: string;
+  id: string | number;
   title?: string;
   subtitle?: string;
   avatar?: string;
   image?: string;
   content?: any;
   actions?: CardAction[];
+  onClick?: CardActionHandler;
 }
 
 export interface CardAction {
   label: string;
   isIcon: boolean;
-  action: (cardId: string) => void;
+  action: CardActionHandler;
 }
