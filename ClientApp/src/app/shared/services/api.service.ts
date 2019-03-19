@@ -29,7 +29,13 @@ export abstract class ApiService extends BaseService {
 
   protected get(url: string): Observable<any> {
     return this.http
-      .get(url, this.httpOptions)
+      .get(this.baseUrl + url, this.httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  protected post(url: string, body: any): Observable<any> {
+    return this.http
+      .post(this.baseUrl + url, body, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 }

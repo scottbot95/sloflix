@@ -12,7 +12,7 @@ namespace sloflix.Services
     Task<Watchlist> GetWatchlistAsync(Claim userId, int watcherlistId);
     Task<Watchlist> CreateAsync(Claim userId, Watchlist watchlist);
     Task<Watchlist> RenameAsync(Claim userId, int watchlistId, string name);
-    Task<Watchlist> AddMovieToListAsync(Claim userId, int watchlistId, Movie movie);
+    Task<Watchlist> AddMovieToListAsync(Claim userId, int watchlistId, int movieId);
     void RemoveMovieFromList(Claim userId, int watchlistId, int movieId);
     void Delete(Claim userId, int watchlistId);
   }

@@ -19,7 +19,7 @@ namespace sloflix.Controllers
 {
   [Authorize(Policy = "ApiUser")]
   [Route("api/[controller]")]
-  public class WatchlistController : Controller
+  public class WatchlistsController : Controller
   {
 
     private readonly ClaimsPrincipal _caller;
@@ -27,7 +27,7 @@ namespace sloflix.Controllers
     private readonly IMapper _mapper;
     private readonly IWatchlistService _watchlistService;
 
-    public WatchlistController(
+    public WatchlistsController(
         DataContext dataContext,
         IHttpContextAccessor httpContextAccessor,
         IMapper mapper,
@@ -39,7 +39,7 @@ namespace sloflix.Controllers
       _watchlistService = watchlistService;
     }
 
-    // GET /api/watchlist
+    // GET /api/watchlists
     [HttpGet]
     /// <summary>
     /// Returns a list of all watchlists currently created by the user
@@ -53,18 +53,18 @@ namespace sloflix.Controllers
       // return new OkObjectResult(watchlists);
     }
 
-    // GET /api/watchlist/{id}
+    // GET /api/watchlists/{id}
     [HttpGet("{watchlistId}")]
     /// <summary>
     /// Returns details (eager load movie details) for a specific watchlist
     /// </summary>
     public async Task<ActionResult<WatchlistDetailsDto>> GetDetails(int watchlistId)
     {
-      var watchlist = await _watchlistService.GetWatchlistAsync(watchlistId);
+      var watchlist = await _watchlistService.GetWatchlistAsync(GetUserId(), watchlistId);
       return new OkObjectResult(_mapper.Map<WatchlistDetailsDto>(watchlist));
     }
 
-    // POST /api/watchlist
+    // POST /api/watchlists
     [HttpPost]
     /// <summary>
     /// Create a new watchlist for the logged in user with provided details
@@ -95,26 +95,40 @@ namespace sloflix.Controllers
       return new OkObjectResult(_mapper.Map<WatchlistDetailsDto>(watchlist)); ;
     }
 
-    // DELETE /api/watchlist/{id}
+    // DELETE /api/watchlists/{id}
     [HttpDelete("{watchlistId}")]
     /// <summary>
     /// Delete the specified watchlist
     /// </summary>
     public IActionResult Delete(int watchlistId)
     {
-      _watchlistService.Delete(watchlistId);
+      _watchlistService.Delete(GetUserId(), watchlistId);
       return new OkResult();
     }
 
-    // PUT /api/watchlist/{id}
+    // PUT /api/watchlists/{id}
     [HttpPut("{watchlistId}")]
+    public async Task<ActionResult<WatchlistSummaryDto>> UpdateWatchlist(int watchlistId, [FromBody] WatchlistSummaryDto dto)
+    {
+      var newName = dto.name;
+      if (string.IsNullOrWhiteSpace(newName))
+      {
+        return new BadRequestObjectResult(Errors.AddErrorToModelState("", ModelState));
+      }
+
+      var watchlist = await _watchlistService.RenameAsync(GetUserId(), watchlistId, newName);
+
+      return new OkObjectResult(watchlist);
+    }
+
+    // PUT /api/watchlists/{id}/{movieId}
+    [HttpPut("{watchlistId}/{movieId}")]
     /// <summary>
     /// Add a movie to an existing watchlist
     /// </summary>
-    public async Task<ActionResult<Watchlist>> AddMovie(int watchlistId, [FromBody]MovieDto dto)
+    public async Task<ActionResult<Watchlist>> AddMovie(int watchlistId, int movieId)
     {
-      var movie = _mapper.Map<Movie>(dto);
-      var watchlist = await _watchlistService.AddMovieToListAsync(watchlistId, movie);
+      var watchlist = await _watchlistService.AddMovieToListAsync(GetUserId(), watchlistId, movieId);
       if (watchlist == null)
       {
         return new BadRequestObjectResult(Errors.AddErrorToModelState("Watchlist doesn't exist", ModelState));
@@ -123,14 +137,14 @@ namespace sloflix.Controllers
       return new OkObjectResult(watchlist);
     }
 
-    // DELETE /api/watchlist/{watchlistId}/{movieId}
+    // DELETE /api/watchlists/{watchlistId}/{movieId}
     [HttpDelete("{watchlistId}/{movieId}")]
     /// <summary>
     /// Remove a movie from the watchlist
     /// </summary>
     public IActionResult RemoveMovie(int watchlistId, int movieId)
     {
-      _watchlistService.RemoveMovieFromList(watchlistId, movieId);
+      _watchlistService.RemoveMovieFromList(GetUserId(), watchlistId, movieId);
       return Ok();
     }
 
