@@ -7,12 +7,11 @@ import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../shared/app.material.module';
 import { AuthGuard } from '../auth.guard';
 import { WatchlistService } from '../shared/services/watchlist.service';
-import { WatchlistsGridComponent } from './watchlists-grid/watchlists-grid.component';
 import { CardListModule } from '../shared/card-list/card-list.module';
 import { UserService } from '../shared/services/user.service';
 import { ApiService } from '../shared/services/api.service';
 import { WatchlistDetailsComponent } from './watchlist-details/watchlist-details.component';
-import { NewWatchlistDialogComponent } from './watchlists-grid/new-watchlist-dialog/new-watchlist-dialog.component';
+import { WatchlistsGridModule } from './watchlists-grid/watchlists-grid.module';
 
 @NgModule({
   imports: [
@@ -21,15 +20,10 @@ import { NewWatchlistDialogComponent } from './watchlists-grid/new-watchlist-dia
     routing,
     SharedModule,
     MaterialModule,
-    CardListModule
+    CardListModule,
+    WatchlistsGridModule
   ],
-  declarations: [
-    HomeComponent,
-    WatchlistsGridComponent,
-    WatchlistDetailsComponent,
-    NewWatchlistDialogComponent
-  ],
-  entryComponents: [NewWatchlistDialogComponent],
+  declarations: [HomeComponent, WatchlistDetailsComponent],
   providers: [AuthGuard, UserService, WatchlistService, ApiService]
 })
 export class DashboardModule {}
