@@ -2,15 +2,16 @@
   <div class="col-md-6">
     <app-spinner [isRunning]="isRequesting"></app-spinner>
     <ng-container *ngIf="!isRequesting">
-      <div *ngIf="success" class="alert alert-success" role="alert">
-        <strong>Logout successful!</strong> Please
-        <a [routerLink]="['/login']">login</a> to continue browsing
-      </div>
-
       <div *ngIf="!success || errors" class="alert alert-danger" role="alert">
         <strong>Oh No!</strong> An error occurred:<br />
         <ng-container *ngIf="errors; then errorDetails; else unknownError">
         </ng-container>
+      </div>
+
+      <div *ngIf="success" class="alert alert-success" role="alert">
+        <strong>Logout successful!</strong> Please
+        <a [routerLink]="['/login']" preserveQueryParams>login</a> to continue
+        browsing
       </div>
     </ng-container>
   </div>

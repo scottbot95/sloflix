@@ -6,12 +6,15 @@ import { FormsModule } from '@angular/forms';
 import { routing } from './account.routing';
 import { SharedModule } from '../shared/shared.module';
 import { UserService } from '../shared/services/user.service';
-import { EqualValidator } from '../directives/equal-validator.directive';
 import { LogoutComponent } from './logout/logout.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, routing, SharedModule],
-  declarations: [RegistrationFormComponent, LoginFormComponent, EqualValidator, LogoutComponent],
+  declarations: [
+    RegistrationFormComponent,
+    LoginFormComponent,
+    LogoutComponent
+  ],
   providers: [UserService]
 })
 export class AccountModule {}
