@@ -5,7 +5,8 @@ import { NewWatchlistDialogComponent } from './new-watchlist-dialog/new-watchlis
 import { MaterialModule } from 'src/app/shared/app.material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CardListModule } from 'src/app/shared/card-list/card-list.module';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule, MatInputModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -13,7 +14,9 @@ import { FormsModule } from '@angular/forms';
     SharedModule,
     MaterialModule,
     CardListModule,
-    FormsModule
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   declarations: [WatchlistsGridComponent, NewWatchlistDialogComponent],
   entryComponents: [NewWatchlistDialogComponent],

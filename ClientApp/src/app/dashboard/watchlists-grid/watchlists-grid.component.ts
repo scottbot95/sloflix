@@ -69,7 +69,13 @@ export class WatchlistsGridComponent implements AfterContentInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed', result);
+      if (result) {
+        this.watchlistService.createWatchlist(result).subscribe(created => {
+          this.router.navigate(['/dashboard/watchlist'], {
+            queryParams: { id: created.id }
+          });
+        });
+      }
     });
   }
 }
