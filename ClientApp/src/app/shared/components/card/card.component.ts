@@ -15,7 +15,7 @@ export class CardComponent {
   private image: string;
   private content: string;
   private actions: CardAction[];
-  private onClick: CardActionHandler;
+  private linkTo: string;
 
   public get card(): CardDetails {
     return this._card;
@@ -31,15 +31,14 @@ export class CardComponent {
     this.image = card.image;
     this.content = card.content;
     this.actions = card.actions;
-    this.onClick = card.onClick;
+    this.linkTo = card.linkTo;
   }
 
   constructor() {}
 
-  private handleClick() {
-    if (typeof this.onClick === 'function') {
-      this.onClick(this.id);
-    }
+  private handleAction($event: Event, action: CardAction) {
+    $event.stopPropagation();
+    action.action(this.id);
   }
 }
 
@@ -53,7 +52,7 @@ export interface CardDetails {
   image?: string;
   content?: any;
   actions?: CardAction[];
-  onClick?: CardActionHandler;
+  linkTo?: string;
 }
 
 export interface CardAction {

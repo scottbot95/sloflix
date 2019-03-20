@@ -11,8 +11,8 @@ export const routing: ModuleWithProviders = RouterModule.forChild([
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: HomeComponent },
-      { path: 'watchlist/:id', component: WatchlistDetailsComponent }
+      { path: 'home', component: HomeComponent, pathMatch: 'full' },
+      { path: 'watchlist', component: WatchlistDetailsComponent }
     ]
   }
 ]);
