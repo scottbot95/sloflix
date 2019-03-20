@@ -1,4 +1,12 @@
-<a [routerLink]="linkTo ? linkTo : null">
+<a
+  *ngIf="linkTo; else card"
+  [routerLink]="linkTo"
+  [queryParams]="queryParams ? queryParams : null"
+>
+  <ng-container *ngTemplateOutlet="card"></ng-container>
+</a>
+
+<ng-template #card>
   <mat-card>
     <mat-card-header *ngIf="title || subtitle || avatar">
       <img *ngIf="avatar" mat-card-avatar [src]="avatar" />
@@ -30,4 +38,4 @@
       </ng-container>
     </mat-card-actions>
   </mat-card>
-</a>
+</ng-template>

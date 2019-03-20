@@ -15,7 +15,8 @@ export class CardComponent {
   private image: string;
   private content: string;
   private actions: CardAction[];
-  private linkTo: string;
+  private linkTo: string[];
+  private queryParams: object;
 
   public get card(): CardDetails {
     return this._card;
@@ -31,7 +32,10 @@ export class CardComponent {
     this.image = card.image;
     this.content = card.content;
     this.actions = card.actions;
-    this.linkTo = card.linkTo;
+    this.linkTo = Array.isArray(card.linkTo)
+      ? card.linkTo // copy if it's an array
+      : typeof card.linkTo === 'string' && [card.linkTo]; // wrap in array if string
+    this.queryParams = card.queryParams;
   }
 
   constructor() {}
@@ -46,13 +50,15 @@ export type CardActionHandler = (cardId: string) => void;
 
 export interface CardDetails {
   id: string | number;
+
   title?: string;
   subtitle?: string;
   avatar?: string;
   image?: string;
   content?: any;
   actions?: CardAction[];
-  linkTo?: string;
+  linkTo?: string[] | string;
+  queryParams?: object;
 }
 
 export interface CardAction {
