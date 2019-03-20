@@ -6,13 +6,7 @@ import { MaterialModule } from '../../app.material.module';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MaterialModule,
-    MatCardModule,
-    MatIconModule,
-    RouterModule
-  ],
+  imports: [CommonModule, MaterialModule, MatCardModule, RouterModule],
   declarations: [CardComponent],
   exports: [CardComponent]
 })

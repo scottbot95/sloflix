@@ -44,4 +44,12 @@ export class WatchlistService {
         tap((data: WatchlistDetails) => this.currentWatchlistSource.next(data))
       );
   }
+
+  createWatchlist(watchlist: WatchlistSummary): Observable<WatchlistDetails> {
+    return this.apiService
+      .post('/watchlists', watchlist)
+      .pipe(
+        tap((data: WatchlistDetails) => this.currentWatchlistSource.next(data))
+      );
+  }
 }
