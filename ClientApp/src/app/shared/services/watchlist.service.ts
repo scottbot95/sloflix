@@ -9,9 +9,10 @@ import {
   WatchlistDetails
 } from '../models/watchlist.interface';
 import { tap } from 'rxjs/operators';
+import { UserService } from './user.service';
 
 @Injectable()
-export class WatchlistService extends ApiService {
+export class WatchlistService {
   // list of all watchlists
   private watchlistsSource: BehaviorSubject<WatchlistSummary[]>;
   public watchlists$: Observable<WatchlistSummary[]>;
@@ -20,9 +21,7 @@ export class WatchlistService extends ApiService {
   private currentWatchlistSource: BehaviorSubject<WatchlistDetails>;
   public currentWatchlist$: Observable<WatchlistDetails>;
 
-  constructor(protected http: HttpClient, protected config: ConfigService) {
-    super(http, config);
-
+  constructor(private apiService: ApiService) {
     this.watchlistsSource = new BehaviorSubject<WatchlistSummary[]>(null);
     this.watchlists$ = this.watchlistsSource.asObservable();
 
@@ -31,8 +30,8 @@ export class WatchlistService extends ApiService {
   }
 
   getAllWatchlists(): Observable<WatchlistSummary> {
-    return this.get('/watchlists').pipe(
-      tap(data => this.watchlistsSource.next(data))
-    );
+    return this.apiService
+      .get('/watchlists')
+      .pipe(tap(data => this.watchlistsSource.next(data)));
   }
 }

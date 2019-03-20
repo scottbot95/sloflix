@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterContentInit } from '@angular/core';
 import { WatchlistSummary } from '../../shared/models/watchlist.interface';
 import { WatchlistService } from '../../shared/services/watchlist.service';
 
@@ -7,12 +7,16 @@ import { WatchlistService } from '../../shared/services/watchlist.service';
   templateUrl: './watchlists-grid.component.html',
   styleUrls: ['./watchlists-grid.component.css']
 })
-export class WatchlistsGridComponent implements OnInit {
+export class WatchlistsGridComponent implements AfterContentInit {
   public watchlists: WatchlistSummary[];
 
   constructor(private watchlistService: WatchlistService) {}
 
-  ngOnInit() {
+  ngAfterContentInit() {
+    this.loadData();
+  }
+
+  loadData() {
     this.watchlistService.getAllWatchlists().subscribe(data => {
       this.watchlistService.watchlists$.subscribe(summaries => {
         this.watchlists = summaries;
