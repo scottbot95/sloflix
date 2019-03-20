@@ -29,16 +29,26 @@ export class WatchlistsGridComponent implements AfterContentInit {
         this.cardItems = summaries.map(
           s =>
             <CardDetails>{
-              id: s.id + '',
+              id: s.id,
               title: s.name,
-              onClick: this.handleCardClick
+              linkTo: '/dashboard/watchlist',
+              queryParams: { id: s.id },
+              actions: [
+                {
+                  action: this.handleEdit,
+                  label: 'edit',
+                  isIcon: true
+                }
+              ]
             }
         );
       });
     });
   }
 
-  private handleCardClick = (id: string) => {
-    this.router.navigate([`/dashboard/watchlist/${id}`]);
+  private handleEdit = (id: string) => {
+    this.router.navigate([`/dashboard/watchlist`], {
+      queryParams: { id, edit: true }
+    });
   };
 }

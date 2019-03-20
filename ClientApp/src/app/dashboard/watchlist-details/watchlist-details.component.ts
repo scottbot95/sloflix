@@ -15,6 +15,9 @@ export class WatchlistDetailsComponent implements OnInit {
   private subscription: Subscription;
   private watchlist: WatchlistDetails;
   private movieCards: CardDetails[];
+  private isLoading: boolean = true;
+
+  private editing: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -22,12 +25,17 @@ export class WatchlistDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.subscription = this.route.paramMap.subscribe((params: ParamMap) => {
-      this.service.getWatchlistDetails(params.get('id')).subscribe(details => {
-        this.watchlist = details;
-        this.generateMovieCards();
-      });
-    });
+    this.subscription = this.route.queryParamMap.subscribe(
+      (params: ParamMap) => {
+        this.service
+          .getWatchlistDetails(params.get('id'))
+          .subscribe(details => {
+            this.watchlist = details;
+            this.generateMovieCards();
+            this.isLoading = false;
+          });
+      }
+    );
   }
 
   private generateMovieCards() {
@@ -42,7 +50,9 @@ export class WatchlistDetailsComponent implements OnInit {
           title: m.title,
           image: m.posterPath,
           content: m.summary,
-          id: m.id
+          id: m.id,
+          linkTo: '/dashboard/movie',
+          queryParams: { id: m.id }
         }
     );
   }
