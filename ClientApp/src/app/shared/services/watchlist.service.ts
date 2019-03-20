@@ -52,4 +52,8 @@ export class WatchlistService {
         tap((data: WatchlistDetails) => this.currentWatchlistSource.next(data))
       );
   }
+
+  // deleteWatchlist(id: number: string): Observable<boolean> {
+  //   return
+  // }
 }
