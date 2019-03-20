@@ -22,6 +22,7 @@
         <button
           *ngIf="!action.isIcon"
           mat-button
+          [matTooltip]="action.tooltip || action.label"
           (click)="handleAction($event, action)"
         >
           {{ action.label }}
@@ -29,6 +30,7 @@
         <button
           *ngIf="action.isIcon"
           mat-icon-button
+          [matTooltip]="action.tooltip || action.label"
           (click)="handleAction($event, action)"
         >
           <mat-icon>
