@@ -1,0 +1,20 @@
+<ng-container *ngIf="isLoading; then loading; else loaded"></ng-container>
+
+<ng-template #loaded>
+  <ng-container *ngIf="editing; then editTitle; else title"></ng-container>
+  <app-card-list [cardItems]="movieCards"></app-card-list>
+</ng-template>
+
+<ng-template #loading>
+  <app-spinner [isRunning]="isLoading"></app-spinner>
+</ng-template>
+
+<ng-template #title>
+  <h1>{{ watchlist.name }}</h1>
+</ng-template>
+
+<ng-template #editTitle>
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="watchlist.name" />
+  </mat-form-field>
+</ng-template>

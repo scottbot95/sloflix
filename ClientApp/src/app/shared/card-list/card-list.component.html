@@ -1,3 +1,10 @@
-<p>
-  card-list works!
-</p>
+<mat-grid-list
+  *ngIf="cardItems && cardItems.length > 0"
+  [responsiveCols]="{ xs: 2, sm: 3, md: 6 }"
+  rowHeight="1:1"
+  gutterSize="5px"
+>
+  <mat-grid-tile *ngFor="let card of cardItems">
+    <app-card [card]="card"></app-card>
+  </mat-grid-tile>
+</mat-grid-list>

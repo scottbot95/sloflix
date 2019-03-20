@@ -1,13 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule, MatGridListModule } from '@angular/material';
+import {
+  MatCardModule,
+  MatGridListModule,
+  MatIconModule
+} from '@angular/material';
 import { MaterialModule } from '../app.material.module';
 import { CardListComponent } from './card-list.component';
-import { CardListItemComponent } from './card-list-item/card-list-item.component';
+import { SharedModule } from '../shared.module';
+import { CardModule } from '../components/card/card.module';
 
 @NgModule({
-  imports: [CommonModule, MaterialModule, MatCardModule, MatGridListModule],
-  declarations: [CardListComponent, CardListItemComponent],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    MatCardModule,
+    MatGridListModule,
+    MatIconModule,
+    SharedModule,
+    CardModule
+  ],
+  declarations: [CardListComponent],
   exports: [CardListComponent]
 })
 export class CardListModule {}

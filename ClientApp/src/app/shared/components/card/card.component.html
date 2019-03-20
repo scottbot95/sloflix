@@ -1,0 +1,41 @@
+<a
+  *ngIf="linkTo; else card"
+  [routerLink]="linkTo"
+  [queryParams]="queryParams ? queryParams : null"
+>
+  <ng-container *ngTemplateOutlet="card"></ng-container>
+</a>
+
+<ng-template #card>
+  <mat-card>
+    <mat-card-header *ngIf="title || subtitle || avatar">
+      <img *ngIf="avatar" mat-card-avatar [src]="avatar" />
+      <mat-card-title *ngIf="title">{{ title }}</mat-card-title>
+      <mat-card-subtitle *ngIf="subtitle">{{ subtitle }}</mat-card-subtitle>
+    </mat-card-header>
+    <img *ngIf="image" [src]="image" />
+    <mat-card-content *ngIf="content">
+      {{ content }}
+    </mat-card-content>
+    <mat-card-actions *ngIf="actions && actions.length > 0">
+      <ng-container *ngFor="let action of actions">
+        <button
+          *ngIf="!action.isIcon"
+          mat-button
+          (click)="handleAction($event, action)"
+        >
+          {{ action.label }}
+        </button>
+        <button
+          *ngIf="action.isIcon"
+          mat-icon-button
+          (click)="handleAction($event, action)"
+        >
+          <mat-icon>
+            {{ action.label }}
+          </mat-icon>
+        </button>
+      </ng-container>
+    </mat-card-actions>
+  </mat-card>
+</ng-template>

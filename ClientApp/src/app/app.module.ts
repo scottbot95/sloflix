@@ -13,9 +13,15 @@ import { AccountModule } from './account/account.module';
 import { ConfigService } from './shared/services/config.service';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { NotFoundComponent } from './shared/components/notfound/notfound.component';
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, HomeComponent],
+  declarations: [
+    AppComponent,
+    NavMenuComponent,
+    HomeComponent,
+    NotFoundComponent
+  ],
   imports: [
     AccountModule,
     DashboardModule,
