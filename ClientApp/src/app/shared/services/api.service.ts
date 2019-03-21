@@ -62,7 +62,7 @@ export class ApiService extends BaseService {
 
   public delete(url: string): Observable<any> {
     return this.http
-      .delete(url, this.httpOptions)
+      .delete(this.baseUrl + url, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 

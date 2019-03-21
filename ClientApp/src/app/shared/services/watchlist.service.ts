@@ -8,7 +8,7 @@ import {
   WatchlistSummary,
   WatchlistDetails
 } from '../models/watchlist.interface';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -53,7 +53,16 @@ export class WatchlistService {
       );
   }
 
-  // deleteWatchlist(id: number: string): Observable<boolean> {
-  //   return
-  // }
+  deleteWatchlist(id: number | string): Observable<boolean> {
+    return this.apiService
+      .delete('/watchlists/' + id)
+      .pipe(
+        tap(data => {
+          this.watchlistsSource.next(
+            this.watchlistsSource.value.filter(wl => wl.id + '' !== id)
+          );
+        })
+      )
+      .pipe(map(data => true));
+  }
 }

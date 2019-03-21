@@ -64,6 +64,6 @@ export interface CardDetails {
 export interface CardAction {
   label: string;
   tooltip?: string;
-  isIcon: boolean;
+  isIcon?: boolean;
   action: CardActionHandler;
 }
