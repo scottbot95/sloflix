@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System;
 
 using sloflix.Models;
+using System.Security.Claims;
 
 namespace sloflix.Data
 {
@@ -50,6 +51,11 @@ namespace sloflix.Data
       foundEntry.State = EntityState.Deleted;
 
       await this.SaveChangesAsync();
+    }
+
+    public Task<MovieWatcher> GetWatcherFromClaim(Claim userId)
+    {
+      return this.MovieWatchers.SingleOrDefaultAsync(mw => mw.IdentityId == userId.Value);
     }
   }
 }

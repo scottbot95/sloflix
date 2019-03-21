@@ -49,7 +49,7 @@ namespace sloflix.Services
       if (string.IsNullOrWhiteSpace(name))
         throw new System.ArgumentException("Watchlist must have name");
 
-      var watcher = await GetWatcherFromClaim(userId);
+      var watcher = await _dataContext.GetWatcherFromClaim(userId);
 
       if (watcher == null)
       {
@@ -115,21 +115,15 @@ namespace sloflix.Services
       return toRename;
     }
 
-    private Task<MovieWatcher> GetWatcherFromClaim(Claim userId)
-    {
-      return _dataContext.MovieWatchers
-          .SingleOrDefaultAsync(w => w.IdentityId == userId.Value);
-    }
-
     private async Task ThrowIfUnauthorized(Claim userId, int watchlistId)
     {
-      var watcher = await GetWatcherFromClaim(userId);
+      var watcher = await _dataContext.GetWatcherFromClaim(userId);
       await ThrowIfUnauthorized(watcher.Id, watchlistId);
     }
 
     private async Task ThrowIfUnauthorized(Claim userId, Watchlist watchlist)
     {
-      var watcher = await GetWatcherFromClaim(userId);
+      var watcher = await _dataContext.GetWatcherFromClaim(userId);
       ThrowIfUnauthorized(watcher.Id, watchlist);
     }
 
