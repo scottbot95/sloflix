@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using sloflix.Data;
 using sloflix.Models;
 
@@ -36,7 +37,9 @@ namespace sloflix.Services
 
     public async Task DeleteAsync(Claim userId, int movieId)
     {
-      throw new System.NotImplementedException();
+      await ThrowIfUnauthorized(userId);
+      var movie = new Movie { Id = movieId };
+      await _dataContext.SafeRemoveAsync(movie, (m1, m2) => m1.Id == m2.Id);
     }
 
     public IQueryable<Movie> GetAllMovies()
@@ -57,6 +60,11 @@ namespace sloflix.Services
       }
 
       return _dataContext.Movies.Where(m => m.Title.StartsWith(name));
+    }
+
+    private async Task ThrowIfUnauthorized(Claim userId)
+    {
+      // FIXME Actually check something here...
     }
   }
 }

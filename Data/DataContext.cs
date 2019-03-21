@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Threading.Tasks;
+using System;
 
 using sloflix.Models;
 
@@ -8,6 +10,8 @@ namespace sloflix.Data
 {
   public class DataContext : IdentityDbContext
   {
+    public delegate bool entityComparator<T>(T entity1, T entity2) where T : class;
+
     public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
     public DbSet<Movie> Movies { get; set; }
@@ -26,6 +30,26 @@ namespace sloflix.Data
 
       modelBuilder.Entity<UserRating>().
         HasKey(r => new { r.MovieId, r.MovieWatcherId });
+    }
+
+    public async Task SafeRemoveAsync<T>(T entity, entityComparator<T> compare) where T : class
+    {
+      EntityEntry foundEntry = null;
+      foreach (var entry in ChangeTracker.Entries<T>())
+      {
+        if (compare(entity, entry.Entity))
+        {
+          foundEntry = entry;
+          break;
+        }
+      }
+      if (foundEntry == null)
+      {
+        foundEntry = this.Attach<T>(entity);
+      }
+      foundEntry.State = EntityState.Deleted;
+
+      await this.SaveChangesAsync();
     }
   }
 }
