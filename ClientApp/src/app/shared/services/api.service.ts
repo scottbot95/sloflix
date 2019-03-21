@@ -45,24 +45,28 @@ export class ApiService extends BaseService {
       }
     });
 
-    this.handleAuthError = this.handleAuthError.bind(this);
+    this.handleError = this.handleError.bind(this);
   }
 
-  get(url: string): Observable<any> {
+  public get(url: string): Observable<any> {
     return this.http
       .get(this.baseUrl + url, this.httpOptions)
-      .pipe(catchError(this.handleAuthError))
       .pipe(catchError(this.handleError));
   }
 
-  post(url: string, body: any): Observable<any> {
+  public post(url: string, body: any): Observable<any> {
     return this.http
       .post(this.baseUrl + url, body, this.httpOptions)
-      .pipe(catchError(this.handleAuthError))
       .pipe(catchError(this.handleError));
   }
 
-  private handleAuthError(error: HttpErrorResponse) {
+  public delete(url: string): Observable<any> {
+    return this.http
+      .delete(this.baseUrl + url, this.httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  protected handleError(error: HttpErrorResponse) {
     if (error.status === 401) {
       const authError = error.headers.get('www-authenticate');
       const queryParams = {
@@ -72,7 +76,7 @@ export class ApiService extends BaseService {
         queryParams['expired'] = true;
       }
       this.router.navigate(['/logout'], { queryParams });
-      return empty();
+      return super.handleError(error);
     } else {
       return throwError(error);
     }

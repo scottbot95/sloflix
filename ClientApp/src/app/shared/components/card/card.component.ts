@@ -63,6 +63,7 @@ export interface CardDetails {
 
 export interface CardAction {
   label: string;
-  isIcon: boolean;
+  tooltip?: string;
+  isIcon?: boolean;
   action: CardActionHandler;
 }

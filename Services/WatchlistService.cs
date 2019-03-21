@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using sloflix.Data;
 using sloflix.Models;
 
@@ -63,13 +64,27 @@ namespace sloflix.Services
       return watchlist;
     }
 
-    public async void Delete(Claim userId, int watchlistId)
+    public async Task Delete(Claim userId, int watchlistId)
     {
       await ThrowIfUnauthorized(userId, watchlistId);
       var watchlist = new Watchlist { Id = watchlistId };
-      _dataContext.Attach<Watchlist>(watchlist);
-      _dataContext.Remove<Watchlist>(watchlist);
-      _dataContext.SaveChanges();
+      var changes = _dataContext.ChangeTracker;
+      EntityEntry foundEntry = null;
+      foreach (var entry in changes.Entries<Watchlist>())
+      {
+        if (entry.Entity.Id == watchlistId)
+        {
+          foundEntry = entry;
+          break;
+        }
+      }
+      if (foundEntry == null)
+      {
+        foundEntry = _dataContext.Attach(watchlist);
+      }
+      foundEntry.State = EntityState.Deleted;
+
+      await _dataContext.SaveChangesAsync();
     }
 
     public async Task<List<Watchlist>> GetAllFromClaimAsync(Claim claim)
@@ -91,11 +106,27 @@ namespace sloflix.Services
           .SingleAsync(list => list.Id == watchlistId);
     }
 
-    public async void RemoveMovieFromList(Claim userId, int watchlistId, int movieId)
+    public async Task RemoveMovieFromList(Claim userId, int watchlistId, int movieId)
     {
       await ThrowIfUnauthorized(userId, watchlistId);
 
       var watchlistItem = new WatchlistItem { WatchlistId = watchlistId, MovieId = movieId };
+      var changes = _dataContext.ChangeTracker.Entries<WatchlistItem>();
+      EntityEntry foundEntry = null;
+      foreach (var entry in changes)
+      {
+        if (entry.Entity.WatchlistId == watchlistId && entry.Entity.MovieId == movieId)
+        {
+          foundEntry = entry;
+          break;
+        }
+      }
+      if (foundEntry == null)
+      {
+        foundEntry = _dataContext.Attach(watchlistItem);
+      }
+      foundEntry.State = EntityState.Deleted;
+
       _dataContext.Attach<WatchlistItem>(watchlistItem);
       _dataContext.Remove<WatchlistItem>(watchlistItem);
       _dataContext.SaveChanges();

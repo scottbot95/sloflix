@@ -44,7 +44,14 @@ export class WatchlistsGridComponent implements AfterContentInit {
                 {
                   action: this.handleEdit,
                   label: 'edit',
-                  isIcon: true
+                  isIcon: true,
+                  tooltip: 'Edit'
+                },
+                {
+                  action: this.handleDelete,
+                  label: 'delete',
+                  isIcon: true,
+                  tooltip: 'Delete'
                 }
               ]
             }
@@ -57,6 +64,10 @@ export class WatchlistsGridComponent implements AfterContentInit {
     this.router.navigate([`/dashboard/watchlist`], {
       queryParams: { id, edit: true }
     });
+  };
+
+  private handleDelete = (id: string) => {
+    this.watchlistService.deleteWatchlist(id).subscribe();
   };
 
   private openDialog(): void {
