@@ -11,6 +11,7 @@ using sloflix.Data;
 using sloflix.Helpers;
 using sloflix.Models;
 using sloflix.Services;
+using sloflix.Helpers.Extensions;
 
 namespace sloflix.Controllers
 {
@@ -37,7 +38,10 @@ namespace sloflix.Controllers
 
     // GET /api/movies/?title
     [HttpGet]
-    public async Task<ActionResult<List<MovieDto>>> Search([FromQuery]string title)
+    public async Task<ActionResult<List<MovieDto>>> Search(
+      [FromQuery]string title,
+      [FromQuery] int page = 1,
+      [FromQuery] int pageSize = 20)
     {
       IQueryable<Movie> foundMovies = null;
       if (title == null)
@@ -53,8 +57,8 @@ namespace sloflix.Controllers
       {
         return new BadRequestObjectResult(Errors.AddErrorToModelState("No Movies Available", ModelState));
       }
-
-      var dto = _mapper.Map<List<MovieDto>>(foundMovies.ToList());
+      var paged = foundMovies.GetPaged(page, pageSize);
+      var dto = _mapper.Map<List<MovieDto>>(paged.Results);
       return new OkObjectResult(dto);
     }
   }
