@@ -18,7 +18,7 @@ namespace sloflix.Models
 
   public class MovieDto
   {
-    public int id { get; set; }
+    public int? id { get; set; }
     public string title { get; set; }
     public string summary { get; set; }
     public string posterPath { get; set; }
