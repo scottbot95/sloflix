@@ -100,9 +100,9 @@ namespace sloflix.Controllers
     /// <summary>
     /// Delete the specified watchlist
     /// </summary>
-    public IActionResult Delete(int watchlistId)
+    public async Task<IActionResult> Delete(int watchlistId)
     {
-      _watchlistService.Delete(GetUserId(), watchlistId);
+      await _watchlistService.Delete(GetUserId(), watchlistId);
       return new OkResult();
     }
 
