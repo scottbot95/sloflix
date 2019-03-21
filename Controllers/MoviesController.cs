@@ -57,8 +57,16 @@ namespace sloflix.Controllers
       {
         return new BadRequestObjectResult(Errors.AddErrorToModelState("No Movies Available", ModelState));
       }
+
+      var headers = Response.Headers;
       var paged = foundMovies.GetPaged(page, pageSize);
       var dto = _mapper.Map<List<MovieDto>>(paged.Results);
+
+      headers.Add("Page-Count", paged.PageCount.ToString());
+      headers.Add("Pages-Remaining", (paged.PageCount - paged.CurrentPage).ToString());
+      headers.Add("Page-Start", paged.FirstRowOnPage.ToString());
+      headers.Add("Page-End", paged.LastRowOnPage.ToString());
+
       return new OkObjectResult(dto);
     }
   }
