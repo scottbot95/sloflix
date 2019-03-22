@@ -1,3 +1,27 @@
-<p>
-  add-movie-dialog works!
-</p>
+<h1 mat-dialog-title>Add Movie</h1>
+
+<mat-dialog-content>
+  <form [formGroup]="data" (submit)="submitForm($event)" id="form">
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        formControlName="movieTitle"
+        placeholder="Movie Title"
+        required
+        [matAutocomplete]="auto"
+      />
+    </mat-form-field>
+
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </form>
+</mat-dialog-content>
+
+<button mat-button type="submit" form="form">Search</button>

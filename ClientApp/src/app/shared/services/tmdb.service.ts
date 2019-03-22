@@ -16,7 +16,7 @@ export class TmdbService {
     let params = this.getBaseParams();
     params = params.append('query', query);
     this.http
-      .get(url, { params })
+      .get<TMDBSearchResults>(url, { params })
       .pipe(catchError(this.handleError))
       .subscribe(result => console.log(result));
     return null;
