@@ -98,10 +98,12 @@ namespace sloflix.Controllers
 
     // GET /api/movies/{id}/rating
     [HttpGet("{movieId}/rating")]
-    public async Task<ActionResult<UserRatingDto>> GetAverageRating(int movieId)
+    public async Task<ActionResult<UserRatingDto>> GetRating(int movieId)
     {
+      var userId = GetUserId();
       var avgRating = await _service.GetAverageRatingAsync(movieId);
-      return new OkObjectResult(new { rating = avgRating });
+      var myRating = await _service.GetUserRatingAsync(userId, movieId);
+      return new OkObjectResult(new { avgRating, myRating });
     }
 
     // PUT /api/movies/{id}/rating
