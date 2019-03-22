@@ -2,6 +2,10 @@
 
 <ng-template #loaded>
   <ng-container *ngIf="editing; then editTitle; else title"></ng-container>
+  <h1>Movies</h1>
+  <button mat-icon-button (click)="openDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
   <app-card-list [cardItems]="movieCards"></app-card-list>
 </ng-template>
 

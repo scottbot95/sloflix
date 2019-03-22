@@ -10,8 +10,8 @@ import { WatchlistService } from '../shared/services/watchlist.service';
 import { CardListModule } from '../shared/card-list/card-list.module';
 import { UserService } from '../shared/services/user.service';
 import { ApiService } from '../shared/services/api.service';
-import { WatchlistDetailsComponent } from './watchlist-details/watchlist-details.component';
 import { WatchlistsGridModule } from './watchlists-grid/watchlists-grid.module';
+import { WatchlistDetailsModule } from './watchlist-details/watchlist-details.module';
 
 @NgModule({
   imports: [
@@ -21,9 +21,10 @@ import { WatchlistsGridModule } from './watchlists-grid/watchlists-grid.module';
     SharedModule,
     MaterialModule,
     CardListModule,
-    WatchlistsGridModule
+    WatchlistsGridModule,
+    WatchlistDetailsModule
   ],
-  declarations: [HomeComponent, WatchlistDetailsComponent],
+  declarations: [HomeComponent],
   providers: [AuthGuard, UserService, WatchlistService, ApiService]
 })
 export class DashboardModule {}

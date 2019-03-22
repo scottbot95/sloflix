@@ -5,6 +5,12 @@ import { of, Observable, Subscription } from 'rxjs';
 import { WatchlistDetails } from '../../shared/models/watchlist.interface';
 import { WatchlistService } from '../../shared/services/watchlist.service';
 import { CardDetails } from '../../shared/components/card/card.component';
+import { MatDialog } from '@angular/material';
+import {
+  AddMovieDialogComponent,
+  AddMovieDialogData,
+  AddMovieDialogResult
+} from './add-movie-dialog/add-movie-dialog.component';
 
 @Component({
   selector: 'app-watchlist-details',
@@ -21,7 +27,8 @@ export class WatchlistDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private service: WatchlistService
+    private service: WatchlistService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -55,5 +62,21 @@ export class WatchlistDetailsComponent implements OnInit {
           queryParams: { id: m.id }
         }
     );
+  }
+
+  private openDialog(): void {
+    const dialogRef = this.dialog.open<
+      AddMovieDialogComponent,
+      AddMovieDialogData,
+      AddMovieDialogResult
+    >(AddMovieDialogComponent, {
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result);
+      }
+    });
   }
 }
