@@ -13,6 +13,9 @@ namespace sloflix.Services
     Task DeleteAsync(Claim userId, int movieId);
     Task<Movie> CreateMovieAsync(MovieDto data);
 
+    Task<int> GetUserRatingAsync(Claim userId, int movieId);
+    Task<double> GetAverageRatingAsync(int movieId);
+
     /// <summary>
     /// Set the rating on a movie based off the claim provided
     /// </summary>
@@ -20,6 +23,7 @@ namespace sloflix.Services
     /// <param name="movieId">Id of movie to rate</param>
     /// <param name="rating">The rating to set for the movie (0-5) (0 means remove rating)</param>
     /// <returns></returns>
-    Task RateMovieAsync(Claim userId, int movieId, int rating);
+    Task<UserRating> RateMovieAsync(Claim userId, int movieId, int rating);
+
   }
 }

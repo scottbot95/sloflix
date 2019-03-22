@@ -12,6 +12,7 @@ using sloflix.Helpers;
 using sloflix.Models;
 using sloflix.Services;
 using sloflix.Helpers.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace sloflix.Controllers
 {
@@ -68,6 +69,54 @@ namespace sloflix.Controllers
       headers.Add("Page-End", paged.LastRowOnPage.ToString());
 
       return new OkObjectResult(dto);
+    }
+
+    // POST /api/movies
+    [HttpPost]
+    public async Task<ActionResult<MovieDto>> Create([FromBody]MovieDto data)
+    {
+      if (string.IsNullOrWhiteSpace(data.title))
+      {
+        return new BadRequestObjectResult(Errors.AddErrorToModelState("Title cannot be blank", ModelState));
+      }
+
+      var movie = await _service.CreateMovieAsync(data);
+
+      var dto = _mapper.Map<MovieDto>(movie);
+      return new OkObjectResult(dto);
+    }
+
+    // DELETE /api/movies/{id}
+    [HttpDelete("{movieId}")]
+    public async Task<IActionResult> DeleteMovie(int movieId)
+    {
+
+      await _service.DeleteAsync(GetUserId(), movieId);
+      return NoContent();
+    }
+
+
+    // GET /api/movies/{id}/rating
+    [HttpGet("{movieId}/rating")]
+    public async Task<ActionResult<UserRatingDto>> GetAverageRating(int movieId)
+    {
+      var avgRating = await _service.GetAverageRatingAsync(movieId);
+      return new OkObjectResult(new { rating = avgRating });
+    }
+
+    // PUT /api/movies/{id}/rating
+    [HttpPut("{movieId}/rating")]
+    public async Task<IActionResult> RateMovie(int movieId, [FromBody]UserRatingDto ratingDto)
+    {
+      var userId = GetUserId();
+      var userRating = await _service.RateMovieAsync(userId, movieId, ratingDto.rating);
+
+      return new OkObjectResult(_mapper.Map<UserRatingDto>(userRating));
+    }
+
+    private Claim GetUserId()
+    {
+      return _caller.Claims.Single(c => c.Type == "id");
     }
   }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -48,7 +49,32 @@ namespace sloflix.Services
       return _dataContext.Movies;
     }
 
-    public async Task RateMovieAsync(Claim userId, int movieId, int rating)
+    public async Task<double> GetAverageRatingAsync(int movieId)
+    {
+      var movie = await _dataContext.Movies.Include(m => m.UserRatings).SingleOrDefaultAsync(m => m.Id == movieId);
+      int sum = 0;
+      int count = 0;
+      foreach (var rating in movie.UserRatings)
+      {
+        sum += rating.Rating;
+        ++count;
+      }
+
+      return ((double)sum) / Math.Max(count, 1);
+    }
+
+    public async Task<int> GetUserRatingAsync(Claim userId, int movieId)
+    {
+      var watcher = await _dataContext.GetWatcherFromClaim(userId);
+
+      var rating = await _dataContext.UserRatings.SingleOrDefaultAsync(r => r.MovieWatcherId == watcher.Id && r.MovieId == movieId);
+
+      return rating.Rating;
+    }
+
+
+
+    public async Task<UserRating> RateMovieAsync(Claim userId, int movieId, int rating)
     {
       var watcher = await _dataContext.GetWatcherFromClaim(userId);
       if (watcher == null)
@@ -58,29 +84,29 @@ namespace sloflix.Services
         );
       }
 
-      var userRating = new UserRating { MovieId = movieId, User = watcher, Rating = rating };
-      var ratingEntry = _dataContext.Entry(userRating);
-      if (rating > 0 && rating < 5)
+      var entity = await _dataContext.UserRatings
+        .SingleOrDefaultAsync(r => r.MovieId == movieId && r.MovieWatcherId == watcher.Id);
+      if (rating > 0 && rating <= 5)
       {
-        // set the user rating
-        switch (ratingEntry.State)
+        if (entity != null)
         {
-          case EntityState.Detached:
-          case EntityState.Unchanged:
-            ratingEntry.State = EntityState.Modified;
-            break;
-          default:
-            System.Console.WriteLine("**************Unknown State***************");
-            System.Console.WriteLine(ratingEntry.State.ToString());
-            break;
+          entity.Rating = rating;
+        }
+        else
+        {
+          entity = new UserRating { MovieId = movieId, User = watcher, Rating = rating };
+          _dataContext.Attach(entity);
         }
       }
-      else
+      else if (entity != null)
       {
-        ratingEntry.State = EntityState.Deleted;
+        await _dataContext.SafeRemoveAsync(entity,
+          (a, b) => a.MovieId == b.MovieId && a.MovieWatcherId == b.MovieWatcherId);
       }
 
       await _dataContext.SaveChangesAsync();
+
+      return entity;
     }
 
     public IQueryable<Movie> SearchMovies(string name)

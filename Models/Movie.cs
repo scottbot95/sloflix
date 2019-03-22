@@ -40,7 +40,7 @@ namespace sloflix.Models
   public class UserRatingDto
   {
     public int rating { get; set; }
-    public int movieWatcherId { get; set; }
+    public int? movieWatcherId { get; set; }
     public int movieId { get; set; }
   }
 }
