@@ -13,15 +13,17 @@
       />
     </mat-form-field>
 
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
       <mat-option
-        *ngFor="let option of filteredOptions | async"
+        *ngFor="let option of (filteredOptions | async)"
         [value]="option"
       >
-        {{ option }}
+        {{ option.title }}
       </mat-option>
     </mat-autocomplete>
   </form>
 </mat-dialog-content>
 
-<button mat-button type="submit" form="form">Search</button>
+<mat-dialog-actions align="end">
+  <button mat-button type="submit" form="form">Search</button>
+</mat-dialog-actions>

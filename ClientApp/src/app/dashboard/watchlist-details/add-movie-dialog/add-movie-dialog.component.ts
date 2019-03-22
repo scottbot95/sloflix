@@ -3,12 +3,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TmdbService } from '../../../shared/services/tmdb.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
   startWith,
   map,
   debounceTime,
-  distinctUntilChanged
+  distinctUntilChanged,
+  switchMap
 } from 'rxjs/operators';
 import { TMDBMovieSummary } from '../../../shared/models/tmdb.interface';
 
@@ -24,11 +25,11 @@ export interface AddMovieDialogData {}
 export class AddMovieDialogComponent implements OnInit {
   private data: FormGroup;
   private movies: string[] = ['Foobar', 'Foobar 2', 'Foobar 3'];
-  private filteredOptions: Observable<string[]>;
+  private filteredOptions: Observable<TMDBMovieSummary[]>;
   private options: TMDBMovieSummary[] = [
     { title: 'Terminator', id: 1 },
     { title: 'Terminator 2', id: 3 },
-    { title: 'Terminator', id: 57 }
+    { title: 'Foobar', id: 57 }
   ];
 
   constructor(
@@ -47,13 +48,13 @@ export class AddMovieDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.filteredOptions = this.data.valueChanges.pipe(
-      // startWith<string | TMDBMovieSummary>(''),
-      // debounceTime(400),
-      // distinctUntilChanged(),
-      // map(value => (typeof value === 'string' ? value : value.title)),
-      // map(title => (title ? this._filter(title) : this.options.slice()))
-      startWith(''),
-      map(title => this._filter(title))
+      map(data => data['movieTitle']),
+      debounceTime(250),
+      distinctUntilChanged(),
+      startWith<string | TMDBMovieSummary>(''),
+      map(value => (typeof value === 'string' ? value : value.title)),
+      switchMap(query => (query ? this.searchMovies(query) : of([])))
+      // map(title => (title ? this._filter(title) : []))
     );
   }
 
@@ -65,18 +66,24 @@ export class AddMovieDialogComponent implements OnInit {
     return movie ? movie.title : undefined;
   }
 
+  private searchMovies(query: string): Observable<TMDBMovieSummary[]> {
+    return this.tmdb.searchMovies(query).pipe(map(result => result.results));
+  }
+
   private submitForm(event: Event): void {
     event.preventDefault();
     this.tmdb.searchMovies(this.data.value['movieTitle']);
   }
 
-  private _filter(query: string): string[] {
+  private _filter(query: string): TMDBMovieSummary[] {
     query = query ? query.toLowerCase() : '';
     if (query && query.length > 3) {
       console.log(query);
     } else {
     }
     // return [];
-    return this.movies.filter(opt => opt.startsWith(query));
+    return this.options.filter(opt =>
+      opt.title.toLowerCase().startsWith(query)
+    );
   }
 }
