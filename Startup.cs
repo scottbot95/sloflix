@@ -142,6 +142,7 @@ namespace sloflix
       );
 
       services.AddScoped<IWatchlistService, WatchlistService>();
+      services.AddScoped<IMovieService, MovieService>();
 
     }
 
