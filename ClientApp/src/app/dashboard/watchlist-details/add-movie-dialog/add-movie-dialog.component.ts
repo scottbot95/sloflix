@@ -42,19 +42,18 @@ export class AddMovieDialogComponent implements OnInit {
     private tmdb: TmdbService
   ) {
     this.data = fb.group({
-      movieTitle: undefined
+      movie: undefined
     });
   }
 
   ngOnInit(): void {
     this.filteredOptions = this.data.valueChanges.pipe(
-      map(data => data['movieTitle']),
+      map(data => data['movie']),
       debounceTime(250),
       distinctUntilChanged(),
       startWith<string | TMDBMovieSummary>(''),
       map(value => (typeof value === 'string' ? value : value.title)),
       switchMap(query => (query ? this.searchMovies(query) : of([])))
-      // map(title => (title ? this._filter(title) : []))
     );
   }
 
@@ -72,7 +71,7 @@ export class AddMovieDialogComponent implements OnInit {
 
   private submitForm(event: Event): void {
     event.preventDefault();
-    this.tmdb.searchMovies(this.data.value['movieTitle']);
+    this.tmdb.searchMovies(this.data.value['movie']);
   }
 
   private _filter(query: string): TMDBMovieSummary[] {

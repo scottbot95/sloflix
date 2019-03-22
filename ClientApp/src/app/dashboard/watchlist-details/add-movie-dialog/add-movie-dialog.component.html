@@ -6,7 +6,7 @@
       <input
         matInput
         type="text"
-        formControlName="movieTitle"
+        formControlName="movie"
         placeholder="Movie Title"
         required
         [matAutocomplete]="auto"
@@ -25,5 +25,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button type="submit" form="form">Search</button>
+  <button mat-button type="submit" form="form" [mat-dialog-close]="data.value">
+    Add
+  </button>
 </mat-dialog-actions>
