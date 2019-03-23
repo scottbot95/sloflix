@@ -68,7 +68,7 @@ export class ApiService extends BaseService {
 
   public put(url: string, body?: any): Observable<any> {
     return this.http
-      .put(this.baseUrl + url, this.httpOptions)
+      .put(this.baseUrl + url, body, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 

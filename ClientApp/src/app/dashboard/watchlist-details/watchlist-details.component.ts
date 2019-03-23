@@ -84,7 +84,13 @@ export class WatchlistDetailsComponent implements OnInit {
           tmdbId: result.id,
           summary: result.overview
         };
-        this.movieService.createMovie(movie).subscribe(movie => {});
+        this.movieService.createMovie(movie).subscribe(movie => {
+          this.watchlistService
+            .addMovieToWatchlist(this.watchlist.id, movie.id)
+            .subscribe(watchlist => {
+              this.watchlist = watchlist;
+            });
+        });
       }
     });
   }
