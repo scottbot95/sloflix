@@ -59,7 +59,7 @@ export class WatchlistDetailsComponent implements OnInit {
         <CardDetails>{
           title: m.title,
           image: m.posterPath,
-          content: m.summary,
+          // content: m.summary,
           id: m.id,
           linkTo: '/dashboard/movie',
           queryParams: { id: m.id }
