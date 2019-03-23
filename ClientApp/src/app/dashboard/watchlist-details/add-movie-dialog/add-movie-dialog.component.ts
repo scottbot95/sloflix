@@ -9,12 +9,12 @@ import {
   map,
   debounceTime,
   distinctUntilChanged,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs/operators';
 import { TMDBMovieSummary } from '../../../shared/models/tmdb.interface';
 
-interface IAddMovieDialogResult {}
-export type AddMovieDialogResult = IAddMovieDialogResult;
+export type AddMovieDialogResult = TMDBMovieSummary;
 export interface AddMovieDialogData {}
 
 @Component({
@@ -24,13 +24,8 @@ export interface AddMovieDialogData {}
 })
 export class AddMovieDialogComponent implements OnInit {
   private data: FormGroup;
-  private movies: string[] = ['Foobar', 'Foobar 2', 'Foobar 3'];
   private filteredOptions: Observable<TMDBMovieSummary[]>;
-  private options: TMDBMovieSummary[] = [
-    { title: 'Terminator', id: 1 },
-    { title: 'Terminator 2', id: 3 },
-    { title: 'Foobar', id: 57 }
-  ];
+  private movie: TMDBMovieSummary;
 
   constructor(
     public dialogRef: MatDialogRef<
@@ -52,6 +47,9 @@ export class AddMovieDialogComponent implements OnInit {
       debounceTime(250),
       distinctUntilChanged(),
       startWith<string | TMDBMovieSummary>(''),
+      tap(value => {
+        if (typeof value === 'object') this.movie = value;
+      }),
       map(value => (typeof value === 'string' ? value : value.title)),
       switchMap(query => (query ? this.searchMovies(query) : of([])))
     );
@@ -72,17 +70,5 @@ export class AddMovieDialogComponent implements OnInit {
   private submitForm(event: Event): void {
     event.preventDefault();
     this.tmdb.searchMovies(this.data.value['movie']);
-  }
-
-  private _filter(query: string): TMDBMovieSummary[] {
-    query = query ? query.toLowerCase() : '';
-    if (query && query.length > 3) {
-      console.log(query);
-    } else {
-    }
-    // return [];
-    return this.options.filter(opt =>
-      opt.title.toLowerCase().startsWith(query)
-    );
   }
 }

@@ -12,6 +12,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { MaterialModule } from '../../shared/app.material.module';
 import { CardListModule } from '../../shared/card-list/card-list.module';
 import { TmdbService } from '../../shared/services/tmdb.service';
+import { MoviesService } from '../../shared/services/movies.service';
 
 @NgModule({
   imports: [
@@ -28,6 +29,6 @@ import { TmdbService } from '../../shared/services/tmdb.service';
   declarations: [WatchlistDetailsComponent, AddMovieDialogComponent],
   entryComponents: [AddMovieDialogComponent],
   exports: [WatchlistDetailsComponent],
-  providers: [TmdbService]
+  providers: [TmdbService, MoviesService]
 })
 export class WatchlistDetailsModule {}

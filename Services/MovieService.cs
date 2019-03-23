@@ -31,6 +31,15 @@ namespace sloflix.Services
         throw new System.ArgumentException("Title cannot be empty", "data");
       }
 
+      if (data.tmdbId != null)
+      {
+        var existing = await _dataContext.Movies.SingleOrDefaultAsync(m => m.TMDbId == data.tmdbId);
+        if (existing != null)
+        {
+          return existing;
+        }
+      }
+
       _dataContext.Add(movie);
       await _dataContext.SaveChangesAsync();
 

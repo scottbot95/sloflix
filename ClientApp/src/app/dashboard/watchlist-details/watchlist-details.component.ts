@@ -11,6 +11,8 @@ import {
   AddMovieDialogData,
   AddMovieDialogResult
 } from './add-movie-dialog/add-movie-dialog.component';
+import { MoviesService } from '../../shared/services/movies.service';
+import { Movie } from 'src/app/shared/models/movie.interface';
 
 @Component({
   selector: 'app-watchlist-details',
@@ -27,14 +29,15 @@ export class WatchlistDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private service: WatchlistService,
+    private watchlistService: WatchlistService,
+    private movieService: MoviesService,
     private dialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.subscription = this.route.queryParamMap.subscribe(
       (params: ParamMap) => {
-        this.service
+        this.watchlistService
           .getWatchlistDetails(params.get('id'))
           .subscribe(details => {
             this.watchlist = details;
@@ -75,7 +78,13 @@ export class WatchlistDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result);
+        const movie = <Movie>{
+          title: result.title,
+          posterPath: result.poster_path,
+          tmdbId: result.id,
+          summary: result.overview
+        };
+        this.movieService.createMovie(movie).subscribe(movie => {});
       }
     });
   }

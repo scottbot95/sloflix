@@ -7,9 +7,25 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { catchError } from 'rxjs/operators';
 
+interface TMDbConfiguration {
+  images: {
+    base_url: string;
+    secure_base_url: string;
+    poster_sizes: string[];
+  };
+}
+
 @Injectable()
 export class TmdbService {
-  constructor(private http: HttpClient) {}
+  private _config: TMDbConfiguration;
+
+  constructor(private http: HttpClient) {
+    const configURL = environment.tmdbBaseURI + '/configuration';
+    let params = this.getBaseParams();
+    http.get<TMDbConfiguration>(configURL, { params }).subscribe(result => {
+      this._config = result;
+    });
+  }
 
   searchMovies(query: string): Observable<TMDBSearchResults> {
     const url = environment.tmdbBaseURI + '/search/movie';
