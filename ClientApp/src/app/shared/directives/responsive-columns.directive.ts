@@ -45,7 +45,6 @@ export class ResponsiveColumns implements OnInit {
     this.initializeColCount();
     this.media.asObservable().subscribe((change: MediaChange) => {
       this.grid.cols = this.colsBySize[change.mqAlias];
-      console.log(change, this.grid.cols);
     });
   }
 

@@ -6,6 +6,10 @@
   >
     <ng-container *ngTemplateOutlet="cardContent"></ng-container>
   </a>
+  <app-user-rating
+    [rating]="rating"
+    [setRating]="handleRatingChange"
+  ></app-user-rating>
   <ng-container *ngTemplateOutlet="cardActions"></ng-container>
 </mat-card>
 
@@ -15,8 +19,8 @@
     <mat-card-title *ngIf="title">{{ title }}</mat-card-title>
     <mat-card-subtitle *ngIf="subtitle">{{ subtitle }}</mat-card-subtitle>
   </mat-card-header>
-  <img *ngIf="image" [src]="image" />
-  <mat-card-content *ngIf="content">
+  <img mat-card-image *ngIf="image" [src]="image" />
+  <mat-card-content>
     {{ content }}
   </mat-card-content>
 </ng-template>

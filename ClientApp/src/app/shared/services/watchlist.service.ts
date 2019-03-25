@@ -65,4 +65,26 @@ export class WatchlistService {
       )
       .pipe(map(data => true));
   }
+
+  addMovieToWatchlist(
+    watchlistId: number,
+    movieId: number
+  ): Observable<WatchlistDetails> {
+    return this.apiService.put(`/watchlists/${watchlistId}/${movieId}`).pipe(
+      tap(data => {
+        this.currentWatchlistSource.next(data);
+      })
+    );
+  }
+
+  removeMovieFromWatchlist(
+    watchlistId: number,
+    movieId: number
+  ): Observable<WatchlistDetails> {
+    return this.apiService.delete(`/watchlists/${watchlistId}/${movieId}`).pipe(
+      tap(data => {
+        this.currentWatchlistSource.next(data);
+      })
+    );
+  }
 }

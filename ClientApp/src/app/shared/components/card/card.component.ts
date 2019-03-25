@@ -7,6 +7,8 @@ import { Input } from '@angular/core';
   styleUrls: ['./card.component.css']
 })
 export class CardComponent {
+  private setRating: (movieId: number, rating: number) => void;
+  private rating: number = 0;
   private _card: CardDetails;
   private id: string;
   private title: string;
@@ -36,6 +38,8 @@ export class CardComponent {
       ? card.linkTo // copy if it's an array
       : typeof card.linkTo === 'string' && [card.linkTo]; // wrap in array if string
     this.queryParams = card.queryParams;
+    this.rating = card.rating;
+    this.setRating = card.setRating;
   }
 
   constructor() {}
@@ -44,6 +48,10 @@ export class CardComponent {
     $event.stopPropagation();
     action.action(this.id);
   }
+
+  private handleRatingChange = rating => {
+    this.setRating(+this.id, rating);
+  };
 }
 
 export type CardActionHandler = (cardId: string) => void;
@@ -59,6 +67,8 @@ export interface CardDetails {
   actions?: CardAction[];
   linkTo?: string[] | string;
   queryParams?: object;
+  rating?: number;
+  setRating?: (movieId: number, rating: number) => void;
 }
 
 export interface CardAction {

@@ -1,0 +1,17 @@
+<span class="d-flex justify-content-center" (mouseout)="handleHover(rating)">
+  <mat-icon
+    *ngFor="let x of (displayRating | times)"
+    class="clickable"
+    (mouseover)="handleHover(x)"
+    (click)="handleClick(x)"
+  >
+    star
+  </mat-icon>
+  <mat-icon
+    *ngFor="let y of (5 - displayRating | times)"
+    class="clickable"
+    (mouseover)="handleHover(displayRating + y)"
+  >
+    star_border
+  </mat-icon>
+</span>

@@ -10,8 +10,8 @@
 
       <div *ngIf="success" class="alert alert-success" role="alert">
         <strong>Logout successful!</strong> Please
-        <a [routerLink]="['/login']" preserveQueryParams>login</a> to continue
-        browsing
+        <a [routerLink]="['/login']" queryParamsHandling="preserve">login</a> to
+        continue browsing
       </div>
     </ng-container>
   </div>

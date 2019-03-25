@@ -31,6 +31,15 @@ namespace sloflix.Services
         throw new System.ArgumentException("Title cannot be empty", "data");
       }
 
+      if (data.tmdbId != null)
+      {
+        var existing = await _dataContext.Movies.SingleOrDefaultAsync(m => m.TMDbId == data.tmdbId);
+        if (existing != null)
+        {
+          return existing;
+        }
+      }
+
       _dataContext.Add(movie);
       await _dataContext.SaveChangesAsync();
 
@@ -68,8 +77,10 @@ namespace sloflix.Services
       var watcher = await _dataContext.GetWatcherFromClaim(userId);
 
       var rating = await _dataContext.UserRatings.SingleOrDefaultAsync(r => r.MovieWatcherId == watcher.Id && r.MovieId == movieId);
-
-      return rating.Rating;
+      if (rating != null)
+        return rating.Rating;
+      else
+        return 0;
     }
 
 

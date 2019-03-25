@@ -66,6 +66,12 @@ export class ApiService extends BaseService {
       .pipe(catchError(this.handleError));
   }
 
+  public put(url: string, body?: any): Observable<any> {
+    return this.http
+      .put(this.baseUrl + url, body, this.httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   protected handleError(error: HttpErrorResponse) {
     if (error.status === 401) {
       const authError = error.headers.get('www-authenticate');
