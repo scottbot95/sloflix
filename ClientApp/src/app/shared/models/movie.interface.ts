@@ -4,6 +4,7 @@ export interface Movie {
   title: string;
   summary: string;
   posterPath: string;
+  rating?: MovieRating;
 }
 
 export interface MovieRating {

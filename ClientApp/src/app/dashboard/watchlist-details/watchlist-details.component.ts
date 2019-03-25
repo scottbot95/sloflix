@@ -54,18 +54,26 @@ export class WatchlistDetailsComponent implements OnInit {
       return;
     }
 
-    this.movieCards = this.watchlist.movies.map(
-      m =>
-        <CardDetails>{
-          title: m.title,
-          image: m.posterPath,
-          // content: m.summary,
-          id: m.id,
-          linkTo: '/dashboard/movie',
-          queryParams: { id: m.id },
-          rating: 0
+    this.movieCards = this.watchlist.movies.map(m => {
+      const card = <CardDetails>{
+        title: m.title,
+        image: m.posterPath,
+        // content: m.summary,
+        id: m.id,
+        linkTo: '/dashboard/movie',
+        queryParams: { id: m.id },
+        rating: 0,
+        setRating: this.setMovieRating
+      };
+      this.movieService.getMovieRating(m.id).subscribe(rating => {
+        if (rating.myRating) {
+          card.rating = rating.myRating;
+        } else {
+          card.rating = rating.avgRating || 0;
         }
-    );
+      });
+      return card;
+    });
   }
 
   private openDialog(): void {
@@ -90,9 +98,16 @@ export class WatchlistDetailsComponent implements OnInit {
             .addMovieToWatchlist(this.watchlist.id, movie.id)
             .subscribe(watchlist => {
               this.watchlist = watchlist;
+              this.generateMovieCards();
             });
         });
       }
     });
   }
+
+  private setMovieRating = (movieId: number, rating: number) => {
+    this.movieService.rateMovie(movieId, rating).subscribe(done => {
+      console.log('rated movie!');
+    });
+  };
 }

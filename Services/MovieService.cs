@@ -77,8 +77,10 @@ namespace sloflix.Services
       var watcher = await _dataContext.GetWatcherFromClaim(userId);
 
       var rating = await _dataContext.UserRatings.SingleOrDefaultAsync(r => r.MovieWatcherId == watcher.Id && r.MovieId == movieId);
-
-      return rating.Rating;
+      if (rating != null)
+        return rating.Rating;
+      else
+        return 0;
     }
 
 

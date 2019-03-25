@@ -9,7 +9,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class UserRatingComponent implements OnChanges, OnInit, OnDestroy {
   @Input() rating: number = 0;
-  @Input() setRating: (number) => void;
+  @Input() setRating: (rating: number) => void;
 
   private displayRating: number = 0;
   private ratingHover = new BehaviorSubject<number>(0);

@@ -6,7 +6,10 @@
   >
     <ng-container *ngTemplateOutlet="cardContent"></ng-container>
   </a>
-  <app-user-rating [rating]="rating"></app-user-rating>
+  <app-user-rating
+    [rating]="rating"
+    [setRating]="handleRatingChange"
+  ></app-user-rating>
   <ng-container *ngTemplateOutlet="cardActions"></ng-container>
 </mat-card>
 
