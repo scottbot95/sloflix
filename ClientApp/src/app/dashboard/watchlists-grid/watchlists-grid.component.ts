@@ -16,8 +16,8 @@ import {
   styleUrls: ['./watchlists-grid.component.css']
 })
 export class WatchlistsGridComponent implements AfterContentInit {
-  private watchlists: WatchlistSummary[];
-  private cardItems: CardDetails[];
+  watchlists: WatchlistSummary[];
+  cardItems: CardDetails[];
 
   constructor(
     private watchlistService: WatchlistService,
@@ -70,7 +70,7 @@ export class WatchlistsGridComponent implements AfterContentInit {
     this.watchlistService.deleteWatchlist(id).subscribe();
   };
 
-  private openDialog(): void {
+  openDialog(): void {
     const dialogRef = this.dialog.open<
       NewWatchlistDialogComponent,
       NewWatchlistDialogData,

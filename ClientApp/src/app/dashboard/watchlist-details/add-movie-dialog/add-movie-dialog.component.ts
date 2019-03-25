@@ -23,9 +23,9 @@ export interface AddMovieDialogData {}
   styleUrls: ['./add-movie-dialog.component.css']
 })
 export class AddMovieDialogComponent implements OnInit {
-  private data: FormGroup;
-  private filteredOptions: Observable<TMDBMovieSummary[]>;
-  private movie: TMDBMovieSummary;
+  data: FormGroup;
+  filteredOptions: Observable<TMDBMovieSummary[]>;
+  movie: TMDBMovieSummary;
 
   constructor(
     public dialogRef: MatDialogRef<
@@ -63,11 +63,11 @@ export class AddMovieDialogComponent implements OnInit {
     return movie ? movie.title : undefined;
   }
 
-  private searchMovies(query: string): Observable<TMDBMovieSummary[]> {
+  searchMovies(query: string): Observable<TMDBMovieSummary[]> {
     return this.tmdb.searchMovies(query).pipe(map(result => result.results));
   }
 
-  private submitForm(event: Event): void {
+  submitForm(event: Event): void {
     event.preventDefault();
     this.tmdb.searchMovies(this.data.value['movie']);
   }
