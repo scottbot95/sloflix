@@ -1,0 +1,8 @@
+<span class="d-flex justify-content-center">
+  <mat-icon *ngFor="let x of (rating | times)">
+    star
+  </mat-icon>
+  <mat-icon *ngFor="let y of (5 - rating | times)">
+    star_border
+  </mat-icon>
+</span>

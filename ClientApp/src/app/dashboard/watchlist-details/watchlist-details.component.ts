@@ -62,7 +62,8 @@ export class WatchlistDetailsComponent implements OnInit {
           // content: m.summary,
           id: m.id,
           linkTo: '/dashboard/movie',
-          queryParams: { id: m.id }
+          queryParams: { id: m.id },
+          rating: 0
         }
     );
   }

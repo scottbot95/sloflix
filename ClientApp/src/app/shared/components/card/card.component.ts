@@ -7,6 +7,8 @@ import { Input } from '@angular/core';
   styleUrls: ['./card.component.css']
 })
 export class CardComponent {
+  private setRating: (rating: number) => void;
+  private rating: number = 0;
   private _card: CardDetails;
   private id: string;
   private title: string;
@@ -36,6 +38,8 @@ export class CardComponent {
       ? card.linkTo // copy if it's an array
       : typeof card.linkTo === 'string' && [card.linkTo]; // wrap in array if string
     this.queryParams = card.queryParams;
+    this.rating = card.rating;
+    this.setRating = card.setRating;
   }
 
   constructor() {}
@@ -59,6 +63,8 @@ export interface CardDetails {
   actions?: CardAction[];
   linkTo?: string[] | string;
   queryParams?: object;
+  rating?: number;
+  setRating?: (rating: number) => void;
 }
 
 export interface CardAction {

@@ -1,7 +1,7 @@
 <mat-grid-list
   *ngIf="cardItems && cardItems.length > 0"
-  [responsiveCols]="{ xs: 2, sm: 3, md: 6 }"
-  rowHeight="1:1"
+  [responsiveCols]="{ xs: 2, sm: 2, md: 4 }"
+  rowHeight="500px"
   gutterSize="5px"
 >
   <mat-grid-tile *ngFor="let card of cardItems">

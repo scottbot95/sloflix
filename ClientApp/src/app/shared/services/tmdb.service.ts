@@ -40,7 +40,7 @@ export class TmdbService {
         for (const result of results.results) {
           result.poster_path =
             result.poster_path &&
-            this._config.images.base_url +
+            this._config.images.secure_base_url +
               this._config.images.poster_sizes[0] +
               result.poster_path;
         }
