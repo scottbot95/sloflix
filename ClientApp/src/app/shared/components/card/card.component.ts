@@ -7,18 +7,19 @@ import { Input } from '@angular/core';
   styleUrls: ['./card.component.css']
 })
 export class CardComponent {
-  private setRating: (movieId: number, rating: number) => void;
-  private rating: number = 0;
   private _card: CardDetails;
-  private id: string;
-  private title: string;
-  private subtitle: string;
-  private avatar: string;
-  private image: string;
-  private content: string;
-  private actions: CardAction[];
-  private linkTo: string[];
-  private queryParams: object;
+
+  setRating: (movieId: number, rating: number) => void;
+  rating: number = 0;
+  id: string;
+  title: string;
+  subtitle: string;
+  avatar: string;
+  image: string;
+  content: string;
+  actions: CardAction[];
+  linkTo: string[];
+  queryParams: object;
 
   public get card(): CardDetails {
     return this._card;
@@ -44,12 +45,12 @@ export class CardComponent {
 
   constructor() {}
 
-  private handleAction($event: Event, action: CardAction) {
+  handleAction($event: Event, action: CardAction) {
     $event.stopPropagation();
     action.action(this.id);
   }
 
-  private handleRatingChange = rating => {
+  handleRatingChange = rating => {
     this.setRating(+this.id, rating);
   };
 }

@@ -11,7 +11,7 @@ export class UserRatingComponent implements OnChanges, OnInit, OnDestroy {
   @Input() rating: number = 0;
   @Input() setRating: (rating: number) => void;
 
-  private displayRating: number = 0;
+  displayRating: number = 0;
   private ratingHover = new BehaviorSubject<number>(0);
   private subscription: Subscription;
 

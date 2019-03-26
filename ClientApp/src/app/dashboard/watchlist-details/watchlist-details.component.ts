@@ -22,10 +22,10 @@ import { Movie } from 'src/app/shared/models/movie.interface';
 export class WatchlistDetailsComponent implements OnInit {
   private subscription: Subscription;
   private watchlist: WatchlistDetails;
-  private movieCards: CardDetails[];
-  private isLoading: boolean = true;
+  movieCards: CardDetails[];
+  isLoading: boolean = true;
 
-  private editing: boolean = false;
+  editing: boolean = false;
 
   constructor(
     private route: ActivatedRoute,

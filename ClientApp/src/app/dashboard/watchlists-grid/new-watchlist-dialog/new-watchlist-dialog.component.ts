@@ -12,7 +12,7 @@ export interface NewWatchlistDialogData {}
   styleUrls: ['./new-watchlist-dialog.component.css']
 })
 export class NewWatchlistDialogComponent {
-  private data: FormGroup;
+  data: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<
@@ -31,11 +31,11 @@ export class NewWatchlistDialogComponent {
     this.dialogRef.close();
   }
 
-  private resetForm(): void {
+  resetForm(): void {
     this.data.reset();
   }
 
-  private submitForm(event: Event): void {
+  submitForm(event: Event): void {
     event.preventDefault();
     this.dialogRef.close(this.data.value);
   }
